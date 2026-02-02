@@ -1,0 +1,27 @@
+{
+  "name": "leisure",
+  "summary": "Extract parks, playgrounds, sports",
+  "description": "The leisure command extracts leisure and recreation features from OSM data. Categories include:\n\n- Parks: parks, gardens, nature reserves, dog parks\n- Sports: pitches, sports centres, stadiums, golf courses, pools\n- Recreation: playgrounds, fitness stations, water parks\n- Culture: marinas, bandstands, dance venues\n\nCalculates area for polygonal features.",
+  "usage": [
+    "osmfast leisure map.osm -o leisure.geojson",
+    "osmfast leisure map.osm --category parks -o parks.geojson",
+    "osmfast leisure map.osm --type playground -o playgrounds.geojson"
+  ],
+  "options": {
+    "-t, --type": "Filter by leisure type (e.g., park, playground)",
+    "-c, --category": "Filter by category: parks, sports, recreation, culture",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Leisure features with:\n- leisure: Feature type\n- name: Place name\n- sport: Sport type(s) for sports facilities\n- area_sqm: Area in square meters (for polygons)\n- Geometry: Point or Polygon",
+  "examples": [
+    ["All leisure", "osmfast leisure city.osm -o leisure.geojson"],
+    ["Parks only", "osmfast leisure city.osm --category parks -o parks.geojson"],
+    ["Playgrounds", "osmfast leisure city.osm --type playground -o playgrounds.geojson"],
+    ["Sports facilities", "osmfast leisure city.osm --category sports -o sports.geojson"],
+    ["Swimming pools", "osmfast leisure city.osm --type swimming_pool -o pools.geojson"],
+    ["Statistics", "osmfast leisure city.osm --stats"]
+  ],
+  "related": ["sport", "tourism", "natural", "poi"]
+}

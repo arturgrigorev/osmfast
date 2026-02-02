@@ -1,0 +1,27 @@
+{
+  "name": "transit",
+  "summary": "Extract public transport data",
+  "description": "The transit command extracts public transport stops and stations from OSM data. It identifies:\n\n- Bus stops and bus stations\n- Train stations and halts\n- Tram stops\n- Subway/metro entrances\n- Ferry terminals\n\nIncludes operator, network, and accessibility information.",
+  "usage": [
+    "osmfast transit map.osm -o transit.geojson",
+    "osmfast transit map.osm --type bus -o bus_stops.geojson",
+    "osmfast transit map.osm --stats"
+  ],
+  "options": {
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--type": "Transit type: bus, rail, tram, subway, ferry, all (default: all)",
+    "--stops-only": "Only extract stops (no routes)",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Transit stops/stations with:\n- transit_type: Mode of transport\n- feature_type: stop, station, platform, etc.\n- name: Stop/station name\n- ref: Reference number\n- operator: Transport operator\n- network: Transit network\n- routes: Route references\n- wheelchair: Accessibility",
+  "examples": [
+    ["All transit", "osmfast transit city.osm -o transit.geojson"],
+    ["Bus stops", "osmfast transit city.osm --type bus -o bus_stops.geojson"],
+    ["Rail stations", "osmfast transit city.osm --type rail -o stations.geojson"],
+    ["Statistics", "osmfast transit city.osm --stats"],
+    ["Subway entrances", "osmfast transit city.osm --type subway -o subway.geojson"],
+    ["CSV format", "osmfast transit city.osm -f csv -o transit.csv"]
+  ],
+  "related": ["railway", "roads", "catchment", "isochrone"]
+}

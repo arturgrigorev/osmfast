@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OSMFast - Bikeability Analysis</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; }
+        #map { position: absolute; top: 0; bottom: 0; left: 0; right: 380px; }
+
+        .sidebar {
+            position: absolute;
+            top: 0; right: 0; bottom: 0;
+            width: 380px;
+            background: #1a1a2e;
+            padding: 25px;
+            overflow-y: auto;
+            color: #f5f5f5;
+            border-left: 4px solid #00C853;
+        }
+
+        .sidebar h1 { font-size: 24px; margin-bottom: 5px; color: #fff; }
+        .sidebar .subtitle { color: #999; font-size: 13px; margin-bottom: 25px; }
+
+        .score-display {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 2px solid #00C853;
+        }
+
+        .score-value {
+            font-size: 48px;
+            font-weight: bold;
+            color: #00C853;
+        }
+
+        .score-grade {
+            font-size: 24px;
+            color: #fff;
+            margin-top: 5px;
+        }
+
+        .component-section {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .component-title {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #00C853;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #1a1a2e;
+        }
+        .metric-row:last-child { border-bottom: none; }
+        .metric-label { color: #aaa; font-size: 13px; }
+        .metric-value { color: #fff; font-weight: bold; font-size: 13px; }
+
+        .bar-container {
+            background: #1a1a2e;
+            border-radius: 4px;
+            height: 8px;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .layer-control {
+            position: absolute;
+            bottom: 25px;
+            left: 15px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.15);
+            z-index: 1000;
+            min-width: 200px;
+        }
+
+        .layer-title { font-size: 12px; font-weight: 600; margin-bottom: 10px; color: #333; }
+
+        .layer-item {
+            display: flex;
+            align-items: center;
+            margin: 6px 0;
+            font-size: 12px;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .layer-item input[type="checkbox"] { margin-right: 8px; cursor: pointer; }
+
+        .layer-line {
+            width: 20px;
+            height: 4px;
+            border-radius: 2px;
+            margin-right: 8px;
+        }
+
+        .layer-symbol {
+            width: 22px;
+            text-align: center;
+            font-size: 14px;
+            margin-right: 6px;
+        }
+
+        .layer-count {
+            margin-left: auto;
+            color: #999;
+            font-size: 11px;
+        }
+
+        .poi-marker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            font-size: 16px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            border: 2px solid;
+        }
+
+        .intersection-marker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+        }
+
+        .legend {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+        }
+
+        .legend-title {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 4px 0;
+            font-size: 11px;
+            color: #ccc;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 4px;
+            border-radius: 2px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <div class="sidebar">
+        <h1>Bikeability Analysis</h1>
+        <div class="subtitle">Somewhat Bikeable</div>
+
+        <div class="score-display">
+            <div class="score-value">52.5</div>
+            <div class="score-grade">Grade: D</div>
+        </div>
+
+        <div class="component-section">
+            <div class="component-title">Component Scores</div>
+            
+            <div class="metric-row">
+                <span class="metric-label">Dedicated Infrastructure</span>
+                <span class="metric-value">31.2</span>
+            </div>
+            <div class="bar-container">
+                <div class="bar-fill" style="width:31.2%;background:#00C853"></div>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Intersection Safety</span>
+                <span class="metric-value">48.1</span>
+            </div>
+            <div class="bar-container">
+                <div class="bar-fill" style="width:48.1%;background:#FF5722"></div>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Road Quality</span>
+                <span class="metric-value">95.7</span>
+            </div>
+            <div class="bar-container">
+                <div class="bar-fill" style="width:95.7%;background:#2196F3"></div>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Network Connectivity</span>
+                <span class="metric-value">100.0</span>
+            </div>
+            <div class="bar-container">
+                <div class="bar-fill" style="width:100%;background:#9C27B0"></div>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Traffic Separation</span>
+                <span class="metric-value">27.8</span>
+            </div>
+            <div class="bar-container">
+                <div class="bar-fill" style="width:27.8%;background:#00BCD4"></div>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Bike Facilities</span>
+                <span class="metric-value">0.0</span>
+            </div>
+            <div class="bar-container">
+                <div class="bar-fill" style="width:0%;background:#FF9800"></div>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Traffic Calming</span>
+                <span class="metric-value">37.0</span>
+            </div>
+            <div class="bar-container">
+                <div class="bar-fill" style="width:37.0%;background:#795548"></div>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Topography</span>
+                <span class="metric-value">70.0</span>
+            </div>
+            <div class="bar-container">
+                <div class="bar-fill" style="width:70%;background:#607D8B"></div>
+            </div>
+        </div>
+
+        <div class="component-section">
+            <div class="component-title">Cycling Infrastructure</div>
+            <div class="metric-row">
+                <span class="metric-label">Total network</span>
+                <span class="metric-value">22.9 km</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Dedicated cycleways</span>
+                <span class="metric-value">1.28 km</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Bike lanes</span>
+                <span class="metric-value">0.51 km</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Bike roads</span>
+                <span class="metric-value">0.00 km</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Separated from traffic</span>
+                <span class="metric-value">1.28 km</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Dedicated ratio</span>
+                <span class="metric-value">7.8%</span>
+            </div>
+        </div>
+
+        <div class="component-section">
+            <div class="component-title">Intersection Safety</div>
+            <div class="metric-row">
+                <span class="metric-label">Bike-car intersections</span>
+                <span class="metric-value">26</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Safe (signalized)</span>
+                <span class="metric-value" style="color:#4CAF50">9</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Dangerous</span>
+                <span class="metric-value" style="color:#F44336">17</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Safety score</span>
+                <span class="metric-value">48.1/100</span>
+            </div>
+        </div>
+
+        <div class="component-section">
+            <div class="component-title">Facilities</div>
+            <div class="metric-row">
+                <span class="metric-label">Bike parking</span>
+                <span class="metric-value">0</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Bike rental</span>
+                <span class="metric-value">0</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Repair stations</span>
+                <span class="metric-value">0</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Bike shops</span>
+                <span class="metric-value">0</span>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-title">Map Legend</div>
+            <div class="legend-item">
+                <div class="legend-color" style="background:#00C853"></div> Dedicated cycleway
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background:#7C4DFF"></div> Bike lane
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background:#00BCD4"></div> Bike road
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background:#FF9800"></div> Shared path
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background:#F44336"></div> Main road (caution)
+            </div>
+        </div>
+    </div>
+
+    <div class="layer-control">
+        <div class="layer-title">Infrastructure</div>
+        <label class="layer-item">
+            <input type="checkbox" id="layer-cycleway" checked onchange="toggleLayer('cycleway')">
+            <div class="layer-line" style="background:#00C853"></div> Cycleways
+            <span class="layer-count" id="count-cycleway"></span>
+        </label>
+        <label class="layer-item">
+            <input type="checkbox" id="layer-bike_lane" checked onchange="toggleLayer('bike_lane')">
+            <div class="layer-line" style="background:#7C4DFF"></div> Bike lanes
+            <span class="layer-count" id="count-bike_lane"></span>
+        </label>
+        <label class="layer-item">
+            <input type="checkbox" id="layer-bike_road" checked onchange="toggleLayer('bike_road')">
+            <div class="layer-line" style="background:#00BCD4"></div> Bike roads
+            <span class="layer-count" id="count-bike_road"></span>
+        </label>
+        <label class="layer-item">
+            <input type="checkbox" id="layer-shared" checked onchange="toggleLayer('shared')">
+            <div class="layer-line" style="background:#FF9800"></div> Shared paths
+            <span class="layer-count" id="count-shared"></span>
+        </label>
+        <label class="layer-item">
+            <input type="checkbox" id="layer-main_road" checked onchange="toggleLayer('main_road')">
+            <div class="layer-line" style="background:#F44336"></div> Main roads
+            <span class="layer-count" id="count-main_road"></span>
+        </label>
+
+        <div class="layer-title" style="margin-top:12px">Safety</div>
+        <label class="layer-item">
+            <input type="checkbox" id="layer-dangerous" checked onchange="toggleLayer('dangerous')">
+            <span class="layer-symbol">⚠️</span> Dangerous intersections
+            <span class="layer-count" id="count-dangerous"></span>
+        </label>
+        <label class="layer-item">
+            <input type="checkbox" id="layer-safe" checked onchange="toggleLayer('safe')">
+            <span class="layer-symbol">🚦</span> Safe crossings
+            <span class="layer-count" id="count-safe"></span>
+        </label>
+
+        <div class="layer-title" style="margin-top:12px">Facilities</div>
+        <label class="layer-item">
+            <input type="checkbox" id="layer-parking" checked onchange="toggleLayer('parking')">
+            <span class="layer-symbol">🅿️</span> Bike parking
+            <span class="layer-count" id="count-parking"></span>
+        </label>
+        <label class="layer-item">
+            <input type="checkbox" id="layer-rental" checked onchange="toggleLayer('rental')">
+            <span class="layer-symbol">🚲</span> Bike rental
+            <span class="layer-count" id="count-rental"></span>
+        </label>
+        <label class="layer-item">
+            <input type="checkbox" id="layer-shop" checked onchange="toggleLayer('shop')">
+            <span class="layer-symbol">🏪</span> Bike shops
+            <span class="layer-count" id="count-shop"></span>
+        </label>
+    </div>
+
+    <script>
+        var center = [-33.826144, 150.995391];
+        var radius = 500;
+        var roads = [{"coords": [[-33.8256758, 150.9965005], [-33.8256705, 150.9965563], [-33.8256672, 150.9965915], [-33.8255767, 150.9975456], [-33.825473, 150.9986839], [-33.8253746, 150.9997742], [-33.8253716, 150.9998074], [-33.8253679, 150.9998485], [-33.8253642, 150.9998926], [-33.8253623, 150.9999153], [-33.8252693, 151.0009936]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Boundary Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8224463, 150.9920787], [-33.8230031, 150.9920378], [-33.8230735, 150.9920326]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Franklin Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.824222, 150.9882776], [-33.8243899, 150.9885763], [-33.8245472, 150.9888717], [-33.8246942, 150.9891685], [-33.8248394, 150.9894838], [-33.8252101, 150.9902838], [-33.8258045, 150.9915772], [-33.8267996, 150.9937407], [-33.8271159, 150.9944167], [-33.8272702, 150.994759], [-33.8274105, 150.9951084], [-33.8274964, 150.9953478], [-33.8275751, 150.9955919], [-33.8276439, 150.9958336], [-33.8277457, 150.9962478], [-33.827823, 150.9966383], [-33.8278538, 150.9968306], [-33.8278755, 150.9970084]], "type": "main_road", "highway": "motorway", "color": "#F44336", "name": "Western Motorway", "cycleway": "", "surface": "asphalt"}, {"coords": [[-33.8250691, 150.9903661], [-33.8252417, 150.990712], [-33.8254543, 150.9911076], [-33.8258045, 150.9915772]], "type": "main_road", "highway": "motorway_link", "color": "#F44336", "name": "Western Motorway Onramp", "cycleway": "", "surface": "asphalt"}, {"coords": [[-33.8271186, 150.9907299], [-33.8271365, 150.9907369], [-33.827165, 150.9907371], [-33.8271922, 150.9907316], [-33.8272325, 150.9907217], [-33.8272559, 150.990721], [-33.8272835, 150.9907251], [-33.827306, 150.9907321], [-33.8273244, 150.9907422], [-33.8273444, 150.9907633], [-33.8273595, 150.9907844], [-33.8273726, 150.9908194], [-33.8278079, 150.9929145]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Thomas Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8265548, 150.9920644], [-33.8265791, 150.9921047], [-33.8266133, 150.9921766], [-33.8270618, 150.9931463], [-33.8274254, 150.993954], [-33.8274359, 150.9939774], [-33.827465, 150.9940419]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Ledger Road", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8270618, 150.9931463], [-33.8278079, 150.9929145], [-33.8285819, 150.992696], [-33.8286392, 150.9926798]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Crawley Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8300246, 150.9921633], [-33.828658, 150.9925769], [-33.8286185, 150.9925889]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Henderson Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8284015, 150.9915354], [-33.829806, 150.9911129]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Leopold Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8280274, 150.9938754], [-33.828047, 150.9939651], [-33.828277, 150.9950189], [-33.8284857, 150.9960794], [-33.8286886, 150.9970913], [-33.8286997, 150.9971466], [-33.8287084, 150.9971893], [-33.8289121, 150.9981864], [-33.8289206, 150.9982118], [-33.8289368, 150.9982338]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Robert Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8289368, 150.9982338], [-33.8289524, 150.9982429], [-33.8289725, 150.9982466], [-33.8289913, 150.998246], [-33.8305439, 150.9977853], [-33.8306406, 150.9977577], [-33.8307227, 150.9977342]], "type": "other", "highway": "unclassified", "color": "#888888", "name": "Peel Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8304918, 150.9966228], [-33.8304201, 150.9966437], [-33.8286997, 150.9971466], [-33.8283595, 150.9972448]], "type": "other", "highway": "unclassified", "color": "#888888", "name": "Fox Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.830067, 150.9944959], [-33.828277, 150.9950189]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "William Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8302847, 150.995547], [-33.8284857, 150.9960794]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Gough Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8271214, 151.0012369], [-33.827138, 151.0012336], [-33.8271538, 151.0012241], [-33.8271698, 151.0012092], [-33.8271846, 151.0011878], [-33.8271913, 151.0011591], [-33.8272871, 151.0001054], [-33.8273937, 150.9989564], [-33.8274529, 150.9982764], [-33.8274467, 150.9982204], [-33.8274334, 150.9981734], [-33.8274141, 150.9981221]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Railway Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8273406, 150.9980246], [-33.82749, 150.9977741]], "type": "other", "highway": "unclassified", "color": "#888888", "name": "Fox Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8266255, 150.9973622], [-33.8265846, 150.9974258], [-33.8265765, 150.9974469], [-33.8265711, 150.9974702], [-33.8265498, 150.9976769], [-33.8264426, 150.998787], [-33.8264392, 150.9988226], [-33.8264358, 150.9988601], [-33.8263395, 150.999928], [-33.8263358, 150.9999692], [-33.826331, 151.0000218], [-33.8262299, 151.0011208], [-33.8259013, 151.0045756], [-33.8258951, 151.0046413]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Meehan Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8273937, 150.9989564], [-33.8264392, 150.9988226], [-33.8255194, 150.9986906], [-33.825473, 150.9986839], [-33.8254386, 150.9986797], [-33.8245595, 150.998572], [-33.8245121, 150.9985666], [-33.8244616, 150.9985599], [-33.8230684, 150.9983818], [-33.8230131, 150.9983747]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Alma Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8265498, 150.9976769], [-33.8256229, 150.9975518], [-33.8255767, 150.9975456], [-33.8255414, 150.99754], [-33.8246559, 150.9974165], [-33.8246176, 150.9974113], [-33.8245822, 150.9974067], [-33.8231744, 150.9972341], [-33.8231157, 150.9972269]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Denison Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8247208, 150.99628], [-33.8232785, 150.9960794], [-33.8232135, 150.9960704]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Carrington Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8256918, 150.994551], [-33.8257148, 150.9946631], [-33.8257944, 150.9950524], [-33.8258095, 150.9950967], [-33.8258432, 150.9951394], [-33.8263543, 150.9956134], [-33.8276011, 150.996758]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Crown Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8263543, 150.9956134], [-33.8264253, 150.9955717], [-33.8270929, 150.9953726]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Tiara Place", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8278785, 150.9962081], [-33.8278099, 150.9959089], [-33.8277267, 150.995615], [-33.8276383, 150.9953264], [-33.8275312, 150.9950217], [-33.8274112, 150.9947243], [-33.8272796, 150.9944217], [-33.8270836, 150.9939927], [-33.8266106, 150.9929822], [-33.8262075, 150.9921078]], "type": "main_road", "highway": "motorway", "color": "#F44336", "name": "Western Motorway", "cycleway": "", "surface": "asphalt"}, {"coords": [[-33.827465, 150.9940419], [-33.8272872, 150.9940907]], "type": "main_road", "highway": "secondary", "color": "#F44336", "name": "Pitt Street", "cycleway": "no", "surface": "paved"}, {"coords": [[-33.8273406, 150.9980246], [-33.8273151, 150.997996], [-33.8266255, 150.9973622], [-33.8259069, 150.9967193], [-33.8256758, 150.9965005]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Railway Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8239799, 150.9919593], [-33.8240398, 150.9919546], [-33.8240614, 150.9919529], [-33.8241477, 150.9919462], [-33.8250777, 150.991874], [-33.825366, 150.9918404]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Franklin Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8233, 150.9952145], [-33.8232877, 150.9953367], [-33.8232135, 150.9960704], [-33.8231157, 150.9972269], [-33.8230131, 150.9983747], [-33.8229315, 150.9991642]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Crimea Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8280534, 150.9999876], [-33.8280915, 150.9997144], [-33.8281375, 150.9993381], [-33.8281629, 150.9990116], [-33.8280861, 150.9984573]], "type": "main_road", "highway": "motorway_link", "color": "#F44336", "name": "Western Motorway Onramp", "cycleway": "", "surface": "asphalt"}, {"coords": [[-33.8304598, 150.9938007], [-33.8303518, 150.9940206], [-33.8303435, 150.9940374], [-33.8302962, 150.9941547], [-33.8302778, 150.9943183], [-33.8303107, 150.9944706], [-33.8303747, 150.9945745], [-33.8304549, 150.9946261], [-33.8306182, 150.9946188], [-33.8306661, 150.9946536], [-33.83068, 150.9947066], [-33.8307101, 150.994856], [-33.8307791, 150.9951988], [-33.8308666, 150.995632], [-33.8309256, 150.9956353]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8303518, 150.9940206], [-33.8302995, 150.993973], [-33.8301787, 150.9938865]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8278755, 150.9970084], [-33.8279048, 150.9972808], [-33.8279272, 150.9975686], [-33.8279404, 150.9978585], [-33.8279447, 150.9981401], [-33.827941, 150.9984967], [-33.8279215, 150.9988174], [-33.8279052, 150.9990184], [-33.8278809, 150.9992385], [-33.8278393, 150.9995487], [-33.8278038, 150.9997626]], "type": "main_road", "highway": "motorway", "color": "#F44336", "name": "Western Motorway", "cycleway": "", "surface": "asphalt"}, {"coords": [[-33.8282367, 150.9972208], [-33.8282618, 150.9971437], [-33.8282791, 150.9970957], [-33.8282904, 150.9970472], [-33.828293, 150.9969934], [-33.8282925, 150.9969562], [-33.828275, 150.9968465], [-33.8282552, 150.9967706], [-33.8282423, 150.9967364], [-33.8282247, 150.996701], [-33.8281993, 150.9966638], [-33.828165, 150.996621], [-33.828146, 150.9965825], [-33.8281269, 150.9965277], [-33.8280965, 150.996378], [-33.8280371, 150.996129], [-33.8279524, 150.9958511], [-33.8277773, 150.9953566], [-33.8275782, 150.9948108], [-33.8274304, 150.9944703], [-33.8272949, 150.994183]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "", "cycleway": "", "surface": "concrete"}, {"coords": [[-33.8241689, 150.9949912], [-33.8241472, 150.9948968], [-33.8241443, 150.9948603], [-33.8240299, 150.9927751], [-33.8239857, 150.9920538], [-33.8239799, 150.9919593]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Railway Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8233496, 150.9920103], [-33.8239078, 150.9919651], [-33.8239258, 150.9919636], [-33.8239799, 150.9919593]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Franklin Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8252217, 150.9946896], [-33.8252137, 150.994593], [-33.8250777, 150.991874], [-33.8250728, 150.9917836], [-33.8250493, 150.9913482], [-33.8250427, 150.9912258], [-33.8250412, 150.9912034], [-33.8250432, 150.9911789], [-33.8250497, 150.9911539], [-33.8250664, 150.9911231]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Young Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8232403, 150.9949991], [-33.8231596, 150.9936141], [-33.8230772, 150.9921013], [-33.8230735, 150.9920326]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Crimea Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8272187, 150.9940184], [-33.8272949, 150.994183]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.825626, 150.9917302], [-33.8261425, 150.9913969]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": "concrete"}, {"coords": [[-33.8259975, 150.9910646], [-33.8260396, 150.9912685], [-33.826042, 150.9912801], [-33.8260566, 150.9913463], [-33.8260774, 150.9914111], [-33.8261093, 150.9914911], [-33.8263153, 150.992017], [-33.8264259, 150.9922769], [-33.8265633, 150.9925846], [-33.8267444, 150.9929792], [-33.8270704, 150.9936802], [-33.8271252, 150.9937964], [-33.8272187, 150.9940184]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "", "cycleway": "", "surface": "concrete"}, {"coords": [[-33.82749, 150.9977741], [-33.8275722, 150.9977949], [-33.8277292, 150.9976318], [-33.8277857, 150.9975755], [-33.827818, 150.9975515]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "Fox Street Underpass", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8303996, 150.9961036], [-33.8302847, 150.995547], [-33.8302148, 150.9952055], [-33.8301876, 150.9950691], [-33.830067, 150.9944959]], "type": "main_road", "highway": "tertiary", "color": "#F44336", "name": "Walpole Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8304973, 150.9962192], [-33.8304812, 150.9962099], [-33.8304637, 150.9962053], [-33.8304451, 150.9962058], [-33.8304272, 150.9962118], [-33.8304109, 150.9962228], [-33.8303974, 150.9962381], [-33.8303845, 150.9962649], [-33.8303798, 150.9962952], [-33.8303836, 150.9963258], [-33.8303956, 150.9963531], [-33.8304144, 150.9963741], [-33.830462, 150.9963888], [-33.8304855, 150.9963821], [-33.8305033, 150.9963696], [-33.8305177, 150.9963519], [-33.8305276, 150.9963303], [-33.8305325, 150.9963048], [-33.8305312, 150.9962786], [-33.8305239, 150.996254], [-33.8305111, 150.9962328], [-33.8304973, 150.9962192]], "type": "main_road", "highway": "tertiary", "color": "#F44336", "name": "", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8256918, 150.994551], [-33.8252217, 150.9946896], [-33.8243097, 150.9949536], [-33.8242764, 150.994962], [-33.8241689, 150.9949912]], "type": "main_road", "highway": "secondary", "color": "#F44336", "name": "Pitt Street", "cycleway": "no", "surface": "asphalt"}, {"coords": [[-33.8272872, 150.9940907], [-33.8270735, 150.994154]], "type": "main_road", "highway": "secondary", "color": "#F44336", "name": "Pitt Street", "cycleway": "no", "surface": "paved"}, {"coords": [[-33.8281849, 150.9973921], [-33.8282149, 150.9973705]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.827818, 150.9975515], [-33.8281849, 150.9973921]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "Fox Street Underpass", "cycleway": "", "surface": "concrete"}, {"coords": [[-33.8239667, 151.0045423], [-33.8239763, 151.0044233], [-33.8239842, 151.0043502], [-33.8243025, 151.0008636], [-33.8243084, 151.0007982], [-33.8244003, 150.9997913], [-33.8244017, 150.999777], [-33.8244067, 150.9997222], [-33.8244115, 150.9996692], [-33.8244131, 150.9996516], [-33.8245121, 150.9985666], [-33.8246176, 150.9974113], [-33.8247208, 150.99628], [-33.8247696, 150.9957454], [-33.8247778, 150.9956555]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Rosehill Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8228967, 150.999529], [-33.8231878, 150.9995624], [-33.8241303, 150.9996858], [-33.8244067, 150.9997222], [-33.8250033, 150.9998005], [-33.8253679, 150.9998485], [-33.8263358, 150.9999692], [-33.8272871, 151.0001054]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Marsden Street South", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8241689, 150.9949912], [-33.8240682, 150.9950151], [-33.8240399, 150.9950224], [-33.8233, 150.9952145]], "type": "main_road", "highway": "secondary", "color": "#F44336", "name": "Pitt Street", "cycleway": "no", "surface": "paved"}, {"coords": [[-33.8233, 150.9952145], [-33.8232094, 150.9952362]], "type": "main_road", "highway": "secondary", "color": "#F44336", "name": "Pitt Street", "cycleway": "no", "surface": "paved"}, {"coords": [[-33.8256758, 150.9965005], [-33.8247778, 150.9956555], [-33.8243414, 150.995256], [-33.8242583, 150.9951744], [-33.8242177, 150.9951158], [-33.8242, 150.9950854], [-33.8241689, 150.9949912]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Railway Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8259975, 150.9910646], [-33.8260205, 150.9910846], [-33.8261063, 150.9912009], [-33.826217, 150.991351], [-33.8262605, 150.9914239], [-33.826477, 150.9919715], [-33.8264956, 150.9920058], [-33.8265151, 150.99203], [-33.8265548, 150.9920644]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "", "cycleway": "", "surface": "concrete"}, {"coords": [[-33.8270735, 150.994154], [-33.8268757, 150.9942125]], "type": "main_road", "highway": "secondary", "color": "#F44336", "name": "Pitt Street", "cycleway": "no", "surface": "paved"}, {"coords": [[-33.8302148, 150.9952055], [-33.8302899, 150.9951857], [-33.8303056, 150.9951816], [-33.83047, 150.9951382], [-33.8305662, 150.9956096], [-33.8307565, 150.9955495], [-33.8306158, 150.9948804], [-33.8305939, 150.9947764], [-33.8304044, 150.9948335], [-33.8304402, 150.9949997], [-33.83047, 150.9951382]], "type": "residential", "highway": "service", "color": "#2196F3", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8232094, 150.9952362], [-33.8226431, 150.9953804], [-33.8217021, 150.9956181], [-33.8215547, 150.9956561]], "type": "main_road", "highway": "secondary", "color": "#F44336", "name": "Pitt Street", "cycleway": "no", "surface": "paved"}, {"coords": [[-33.8266252, 150.9942844], [-33.8256918, 150.994551]], "type": "main_road", "highway": "secondary", "color": "#F44336", "name": "Pitt Street", "cycleway": "no", "surface": "paved"}, {"coords": [[-33.8268757, 150.9942125], [-33.8267207, 150.9942579]], "type": "main_road", "highway": "secondary", "color": "#F44336", "name": "Pitt Street", "cycleway": "no", "surface": "paved"}, {"coords": [[-33.8267207, 150.9942579], [-33.8266252, 150.9942844]], "type": "main_road", "highway": "secondary", "color": "#F44336", "name": "Pitt Street", "cycleway": "no", "surface": "paved"}, {"coords": [[-33.8304402, 150.9949997], [-33.8302822, 150.995044], [-33.8302615, 150.9950488], [-33.8301876, 150.9950691]], "type": "residential", "highway": "service", "color": "#2196F3", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8305662, 150.9956096], [-33.8305501, 150.9957387], [-33.8306544, 150.9958189]], "type": "residential", "highway": "service", "color": "#2196F3", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8300183, 150.9933855], [-33.8299565, 150.9934111], [-33.8299506, 150.9934678], [-33.8299472, 150.9935026], [-33.8299491, 150.9935465], [-33.8300515, 150.9940118], [-33.8302615, 150.9950488]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8305409, 150.9961864], [-33.8305161, 150.99618], [-33.8304969, 150.9961608], [-33.8304789, 150.9961207], [-33.8304256, 150.9961361], [-33.830415, 150.9961392], [-33.8303934, 150.996145], [-33.8303311, 150.9961616]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8302615, 150.9950488], [-33.8302899, 150.9951857], [-33.8304789, 150.9961207]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8303996, 150.9961036], [-33.8303927, 150.9961278], [-33.8303934, 150.996145], [-33.8303974, 150.9962381]], "type": "main_road", "highway": "tertiary", "color": "#F44336", "name": "Walpole Street", "cycleway": "", "surface": ""}, {"coords": [[-33.8304637, 150.9962053], [-33.8304256, 150.9961361], [-33.8304164, 150.9961196], [-33.8303996, 150.9961036]], "type": "main_road", "highway": "tertiary", "color": "#F44336", "name": "Walpole Street", "cycleway": "", "surface": ""}, {"coords": [[-33.8304144, 150.9963741], [-33.8304555, 150.9964697], [-33.8304713, 150.9965064]], "type": "main_road", "highway": "tertiary", "color": "#F44336", "name": "Walpole Street", "cycleway": "", "surface": ""}, {"coords": [[-33.8304713, 150.9965064], [-33.8304762, 150.9964641], [-33.8304855, 150.9963821]], "type": "main_road", "highway": "tertiary", "color": "#F44336", "name": "Walpole Street", "cycleway": "", "surface": ""}, {"coords": [[-33.8282367, 150.9972208], [-33.8283595, 150.9972448]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "Fox Strret Underpass", "cycleway": "", "surface": "concrete"}, {"coords": [[-33.8278845, 151.0000862], [-33.8279581, 150.9997027], [-33.828011, 150.9993555], [-33.8280493, 150.9990062], [-33.828072, 150.9987437], [-33.8280861, 150.9984573]], "type": "bike_lane", "highway": "motorway", "color": "#7C4DFF", "name": "Western Motorway", "cycleway": "lane", "surface": "asphalt"}, {"coords": [[-33.8278755, 150.9970084], [-33.8277641, 150.9970365], [-33.8277273, 150.9970674], [-33.8277195, 150.9971546], [-33.8277318, 150.9973262], [-33.8277284, 150.9974295], [-33.8277039, 150.9975274], [-33.8276605, 150.9976374], [-33.8276048, 150.9976977], [-33.8275722, 150.9977949]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "", "cycleway": "", "surface": "concrete"}, {"coords": [[-33.8232162, 150.993103], [-33.8239503, 150.9928055]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8283957, 150.9984869], [-33.8283809, 150.9983015], [-33.8283396, 150.9980316], [-33.8282149, 150.9973705]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "", "cycleway": "", "surface": "concrete"}, {"coords": [[-33.8282149, 150.9973705], [-33.8282236, 150.997279], [-33.8282367, 150.9972208]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "Fox Street Underpass", "cycleway": "", "surface": "concrete"}, {"coords": [[-33.8261425, 150.9913969], [-33.826217, 150.991351]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": "concrete"}, {"coords": [[-33.825626, 150.9917302], [-33.8256091, 150.9917427], [-33.8255417, 150.9915905], [-33.8254787, 150.9916313]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": "concrete"}, {"coords": [[-33.8254787, 150.9916313], [-33.8254444, 150.9916527], [-33.8253935, 150.9916802]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8256449, 150.9900763], [-33.8257296, 150.9900559], [-33.8257669, 150.9900432]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8257669, 150.9900432], [-33.8257601, 150.989952]], "type": "residential", "highway": "service", "color": "#2196F3", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8261063, 150.9912009], [-33.8260895, 150.9912011], [-33.8260732, 150.9912051], [-33.826059, 150.9912126], [-33.8260484, 150.9912257], [-33.8260417, 150.991242], [-33.8260396, 150.9912685]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8248556, 150.9914535], [-33.8248489, 150.9913668]], "type": "residential", "highway": "service", "color": "#2196F3", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8248489, 150.9913668], [-33.8249596, 150.9913565], [-33.8250493, 150.9913482]], "type": "residential", "highway": "service", "color": "#2196F3", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.824779, 150.9914628], [-33.8248556, 150.9914535], [-33.8249369, 150.9914437]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8264983, 150.9907342], [-33.8263477, 150.9899666], [-33.8263279, 150.9897824]], "type": "residential", "highway": "service", "color": "#2196F3", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8261985, 150.9906392], [-33.8260462, 150.9898637]], "type": "residential", "highway": "service", "color": "#2196F3", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8263968, 150.9909732], [-33.826429, 150.9911203], [-33.8264347, 150.991157], [-33.826437, 150.9912115], [-33.8264655, 150.9913577]], "type": "residential", "highway": "service", "color": "#2196F3", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8264347, 150.991157], [-33.8265276, 150.9911349], [-33.8267848, 150.9910719], [-33.8268116, 150.9910634], [-33.8268991, 150.9910116]], "type": "residential", "highway": "service", "color": "#2196F3", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8269855, 150.991619], [-33.8269562, 150.9914567], [-33.8269528, 150.9914291], [-33.826966, 150.9912184], [-33.8269648, 150.9911867], [-33.8269539, 150.9911438], [-33.8268991, 150.9910116], [-33.826892, 150.9909712], [-33.826892, 150.9909083], [-33.8269006, 150.9908779], [-33.8269184, 150.9908517], [-33.8269396, 150.9908303], [-33.8269608, 150.9908144], [-33.8270521, 150.9907736], [-33.8270721, 150.9907633], [-33.8271186, 150.9907299]], "type": "residential", "highway": "service", "color": "#2196F3", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8269309, 150.9916639], [-33.826794, 150.9917013], [-33.8267738, 150.9917024], [-33.8267495, 150.9917013], [-33.826726, 150.991704], [-33.8265991, 150.9917468], [-33.8265496, 150.9917847], [-33.8265041, 150.991866], [-33.8265023, 150.9918823], [-33.8265068, 150.9919094], [-33.8265397, 150.9920064], [-33.8265548, 150.9920644]], "type": "residential", "highway": "service", "color": "#2196F3", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8217152, 150.9957014], [-33.821719, 150.9957257], [-33.82175, 150.9959217]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "", "cycleway": "", "surface": "concrete"}, {"coords": [[-33.8216879, 150.9955362], [-33.8217021, 150.9956181], [-33.8217152, 150.9957014]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "", "cycleway": "crossing", "surface": "paved"}, {"coords": [[-33.8283957, 150.9984869], [-33.8284188, 150.9984352], [-33.8286171, 150.9983896], [-33.8287467, 150.9983686], [-33.8289205, 150.9984168], [-33.8291277, 150.9984222], [-33.8293056, 150.9984513], [-33.8294463, 150.9985134], [-33.8295934, 150.998618]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "A&amp;#39;Becketts Creek Shared Path", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8278038, 150.9997626], [-33.8275634, 151.0010645]], "type": "main_road", "highway": "motorway", "color": "#F44336", "name": "Western Motorway", "cycleway": "", "surface": "asphalt"}, {"coords": [[-33.8305701, 150.9963571], [-33.8305645, 150.9963115], [-33.8305576, 150.9962702], [-33.8305516, 150.9962295], [-33.8305409, 150.9961864]], "type": "cycleway", "highway": "cycleway", "color": "#00C853", "name": "A&amp;#39;Becketts Creek Shared Path", "cycleway": "crossing", "surface": "asphalt"}, {"coords": [[-33.8253096, 150.999905], [-33.8253623, 150.9999153], [-33.8254379, 150.999926]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8254379, 150.999926], [-33.8254438, 150.9999491]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8243509, 150.9997846], [-33.8244003, 150.9997913], [-33.8244617, 150.9998013]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8224678, 150.9994032], [-33.8225803, 150.9994143], [-33.8226729, 150.9994213], [-33.8227529, 150.9993932], [-33.8227816, 150.9993704], [-33.8228096, 150.9993481], [-33.8228621, 150.9992668], [-33.8228829, 150.9991343], [-33.8230447, 150.9972497], [-33.8231327, 150.9963409], [-33.8232153, 150.9954], [-33.8232345, 150.9953506], [-33.8232114, 150.9953373], [-33.8230989, 150.9953735], [-33.8228796, 150.9954216], [-33.8226792, 150.9954741], [-33.821719, 150.9957257], [-33.8208281, 150.9959404], [-33.8206422, 150.9960106]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8253125, 150.9997666], [-33.8253746, 150.9997742], [-33.8254444, 150.9997828]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8253125, 150.9997666], [-33.8245314, 150.9996672], [-33.8244131, 150.9996516], [-33.8242439, 150.9996287], [-33.8229649, 150.999458], [-33.8229589, 150.9994572]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8253096, 150.999905], [-33.8244617, 150.9998013]], "type": "other", "highway": "footway", "color": "#888888", "name": "Marsden Street", "cycleway": "", "surface": ""}, {"coords": [[-33.8304048, 150.9965717], [-33.8304201, 150.9966437], [-33.8304304, 150.9966923]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8303311, 150.9961616], [-33.8303453, 150.9962779], [-33.8303761, 150.9964214], [-33.83039, 150.9964876], [-33.8303991, 150.9965304], [-33.8304048, 150.9965717]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.83039, 150.9964876], [-33.8304555, 150.9964697], [-33.8304762, 150.9964641], [-33.8305386, 150.9964471]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8301481, 150.9931629], [-33.8302095, 150.9931452], [-33.8302743, 150.9931264]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8288558, 150.9935411], [-33.8295102, 150.9933484], [-33.8297372, 150.9932837], [-33.8298765, 150.993244], [-33.8299174, 150.9932317], [-33.8301481, 150.9931629]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8299174, 150.9932317], [-33.8299365, 150.9933172], [-33.8299565, 150.9934111]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8297715, 150.9934659], [-33.829846, 150.9934424], [-33.8299281, 150.9934192], [-33.8299565, 150.9934111]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8297372, 150.9932837], [-33.8297535, 150.9933704], [-33.8297715, 150.9934659]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8287436, 150.9935725], [-33.8288031, 150.9935558], [-33.8288558, 150.9935411]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8287436, 150.9935725], [-33.8274653, 150.9939411]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8274653, 150.9939411], [-33.8274254, 150.993954], [-33.8273676, 150.9939725]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8268485, 150.9941444], [-33.8272527, 150.9940307]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8272527, 150.9940307], [-33.8273246, 150.9940046], [-33.8273485, 150.9939904], [-33.8273676, 150.9939725]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8261881, 150.9934768], [-33.8265144, 150.9942018], [-33.8252737, 150.9945742]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8265144, 150.9942018], [-33.8265356, 150.9941981]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8265356, 150.9941981], [-33.8265833, 150.9941856], [-33.8266356, 150.9941718]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8266356, 150.9941718], [-33.8266896, 150.9941784], [-33.8267442, 150.9941704], [-33.8268485, 150.9941444]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8251527, 150.9946083], [-33.8252137, 150.994593], [-33.8252737, 150.9945742]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8251527, 150.9946083], [-33.8251355, 150.9946134], [-33.8242422, 150.9948757]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8242422, 150.9948757], [-33.8242764, 150.994962], [-33.8243193, 150.9950579]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8240576, 150.9949166], [-33.8241472, 150.9948968], [-33.8242422, 150.9948757]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8240576, 150.9949166], [-33.8240682, 150.9950151], [-33.8240788, 150.9951133]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8240788, 150.9951133], [-33.8242, 150.9950854], [-33.8243193, 150.9950579]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8240576, 150.9949166], [-33.823996, 150.994937], [-33.8233273, 150.9951049], [-33.8232093, 150.9951345], [-33.8231765, 150.9951427], [-33.8227509, 150.9952495], [-33.8226851, 150.9952615]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8225833, 150.9952779], [-33.8226365, 150.9952693], [-33.8226851, 150.9952615]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8216879, 150.9955362], [-33.8217039, 150.9955172], [-33.8217548, 150.9954976], [-33.8225472, 150.9953026], [-33.8225833, 150.9952779]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8232345, 150.9953506], [-33.8232877, 150.9953367], [-33.8233562, 150.9953186]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8233562, 150.9953186], [-33.8240458, 150.9951297], [-33.8240788, 150.9951133], [-33.8241338, 150.9951498], [-33.8247154, 150.9956876], [-33.8247131, 150.9957211], [-33.8246708, 150.9961878], [-33.8232853, 150.996002], [-33.8233562, 150.9953186]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8243193, 150.9950579], [-33.8243342, 150.9950537], [-33.8256523, 150.9946831], [-33.8257437, 150.9950975], [-33.8257638, 150.9951498], [-33.8258117, 150.9952008], [-33.8264734, 150.9958257], [-33.82684, 150.996169], [-33.8268923, 150.9961878], [-33.8275875, 150.9968463]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8256523, 150.9946831], [-33.8257148, 150.9946631], [-33.8257693, 150.9946455]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8276176, 150.9966706], [-33.8276577, 150.9967122], [-33.8276722, 150.9967605], [-33.8276867, 150.996904], [-33.8276844, 150.9970421], [-33.8276599, 150.9971708], [-33.8276421, 150.9973036], [-33.827631, 150.997419], [-33.827631, 150.997472], [-33.827631, 150.9974833], [-33.8276443, 150.9975531], [-33.8276605, 150.9976374]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8276176, 150.9966706], [-33.8265057, 150.9956487]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8263642, 150.9955132], [-33.8264253, 150.9955717], [-33.8265057, 150.9956487]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8263642, 150.9955132], [-33.8258785, 150.9950653], [-33.8258629, 150.9950184], [-33.8257894, 150.9946429]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8257693, 150.9946455], [-33.8257894, 150.9946429], [-33.8267854, 150.9943304], [-33.8269053, 150.994279]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8269053, 150.994279], [-33.8273172, 150.9941627]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8273172, 150.9941627], [-33.827592, 150.9940809], [-33.8277413, 150.9940528], [-33.8280075, 150.9939763]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8280075, 150.9939763], [-33.828047, 150.9939651], [-33.8280922, 150.9939522]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8280922, 150.9939522], [-33.8297715, 150.9934659]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8232403, 150.9949991], [-33.8232135, 150.9951144], [-33.8232093, 150.9951345], [-33.8232092, 150.9951546], [-33.8232094, 150.9952362]], "type": "shared", "highway": "path", "color": "#FF9800", "name": "", "cycleway": "", "surface": "paved"}, {"coords": [[-33.82749, 150.9977741], [-33.8275857, 150.99762]], "type": "other", "highway": "unclassified", "color": "#888888", "name": "Fox Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8274141, 150.9981221], [-33.8273907, 150.9980822], [-33.82736, 150.9980465], [-33.8273406, 150.9980246]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Railway Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8243342, 150.9950537], [-33.8243178, 150.9951064], [-33.8243256, 150.9951462], [-33.8243554, 150.9951746], [-33.8250972, 150.9958526], [-33.8255604, 150.9963095], [-33.8256048, 150.9963189], [-33.8259585, 150.9966522], [-33.8265172, 150.9971942], [-33.826602, 150.997249], [-33.8270253, 150.9976397], [-33.8272859, 150.9978857], [-33.8273078, 150.9978931], [-33.8273257, 150.9978877], [-33.8273465, 150.9978796], [-33.827593, 150.9974923], [-33.8276087, 150.9974829], [-33.827631, 150.997472]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8264768, 150.9973734], [-33.8264566, 150.9973227], [-33.826013, 150.996909], [-33.8257261, 150.9966554]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8256149, 150.9965354], [-33.8256672, 150.9965915], [-33.8257261, 150.9966554]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8248659, 150.9958349], [-33.825173, 150.9961188], [-33.8255918, 150.9965157], [-33.8256149, 150.9965354]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8247154, 150.9956876], [-33.8247696, 150.9957454], [-33.8248659, 150.9958349]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8240576, 150.9949166], [-33.8240644, 150.9948632], [-33.8239975, 150.99372], [-33.8239503, 150.9928055], [-33.8239133, 150.9920594]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8239133, 150.9920594], [-33.8239857, 150.9920538], [-33.8240659, 150.9920478]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8240659, 150.9920478], [-33.8241145, 150.9929784], [-33.8241636, 150.9939315], [-33.8241997, 150.9945747], [-33.8242146, 150.994829], [-33.824225, 150.9948547], [-33.8242422, 150.9948757]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8278038, 150.9997626], [-33.8277027, 150.9998812], [-33.8273569, 151.0015189]], "type": "main_road", "highway": "motorway_link", "color": "#F44336", "name": "Church Street Offramp", "cycleway": "", "surface": "asphalt"}, {"coords": [[-33.8230735, 150.9983127], [-33.8230684, 150.9983818], [-33.8230634, 150.9984486]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8231678, 150.9973056], [-33.8230735, 150.9983127]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8230634, 150.9984486], [-33.8229649, 150.999458]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8231678, 150.9973056], [-33.8231744, 150.9972341], [-33.8231808, 150.9971644]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8231808, 150.9971644], [-33.8232734, 150.9961377]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8232853, 150.996002], [-33.8232785, 150.9960794], [-33.8232734, 150.9961377]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8240573, 150.9918679], [-33.8240614, 150.9919529], [-33.8240659, 150.9920478]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8239029, 150.9918808], [-33.8239078, 150.9919651], [-33.8239133, 150.9920594]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8239029, 150.9918808], [-33.82315, 150.9919397], [-33.8231314, 150.9919412]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8231314, 150.9919412], [-33.8230683, 150.9919447], [-33.8229974, 150.9919487]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8302261, 150.9932331], [-33.8299671, 150.9933077], [-33.8299365, 150.9933172], [-33.8298287, 150.9933492], [-33.8297535, 150.9933704], [-33.8297209, 150.9933796], [-33.8288195, 150.9936433], [-33.8280274, 150.9938754], [-33.827465, 150.9940419]], "type": "main_road", "highway": "secondary", "color": "#F44336", "name": "Pitt Street", "cycleway": "no", "surface": "asphalt"}, {"coords": [[-33.830067, 150.9944959], [-33.8298525, 150.9934727], [-33.829846, 150.9934424], [-33.8298287, 150.9933492]], "type": "main_road", "highway": "tertiary", "color": "#F44336", "name": "Walpole Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8229974, 150.9919487], [-33.8224975, 150.9919897]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8229974, 150.9919487], [-33.8230031, 150.9920378], [-33.8230086, 150.992124]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.82315, 150.9919397], [-33.8231556, 150.992026], [-33.8231611, 150.9921115]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8230086, 150.992124], [-33.8231765, 150.9951427]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8233273, 150.9951049], [-33.8232162, 150.993103], [-33.8231611, 150.9921115]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8280861, 150.9984573], [-33.8280883, 150.9980587], [-33.828075, 150.9976227], [-33.8280552, 150.9973599], [-33.8280126, 150.9969755], [-33.827981, 150.9967475], [-33.8279391, 150.9965101], [-33.8278785, 150.9962081]], "type": "main_road", "highway": "motorway", "color": "#F44336", "name": "Western Motorway", "cycleway": "", "surface": "asphalt"}, {"coords": [[-33.8262075, 150.9921078], [-33.8256203, 150.9908341]], "type": "main_road", "highway": "motorway", "color": "#F44336", "name": "Western Motorway", "cycleway": "", "surface": "asphalt"}, {"coords": [[-33.8257176, 150.9922495], [-33.8261609, 150.9932167], [-33.8263512, 150.9936389], [-33.8265833, 150.9941856], [-33.8266252, 150.9942844]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Auburn Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8245068, 150.9896216], [-33.8253269, 150.9913787], [-33.8254444, 150.9916527], [-33.8255121, 150.9918104], [-33.8257176, 150.9922495]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Auburn Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.825366, 150.9918404], [-33.8254306, 150.9918328], [-33.8254453, 150.9918308], [-33.825462, 150.9918271], [-33.8254843, 150.9918211], [-33.8255121, 150.9918104]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Franklin Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8230735, 150.9920326], [-33.8231556, 150.992026], [-33.8233496, 150.9920103]], "type": "residential", "highway": "residential", "color": "#2196F3", "name": "Franklin Street", "cycleway": "", "surface": "paved"}, {"coords": [[-33.8253958, 150.991756], [-33.8254306, 150.9918328], [-33.8254688, 150.9919172]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8253935, 150.9916802], [-33.8253724, 150.9916923], [-33.8253958, 150.991756]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8240573, 150.9918679], [-33.8249879, 150.9917952], [-33.8249596, 150.9913565], [-33.8249359, 150.9909896], [-33.8251037, 150.9911246], [-33.8251305, 150.991164], [-33.8253724, 150.9916923]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8250728, 150.9917836], [-33.8253622, 150.9917657], [-33.8253958, 150.991756]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}, {"coords": [[-33.8240659, 150.9920478], [-33.8249916, 150.9919785], [-33.8251355, 150.9946134]], "type": "other", "highway": "footway", "color": "#888888", "name": "", "cycleway": "", "surface": ""}];
+        var intersectionsData = [{"lat": -33.8217021, "lon": 150.9956181, "safe": false, "symbol": "\u26a0\ufe0f", "label": "Dangerous Intersection"}, {"lat": -33.8299365, "lon": 150.9933172, "safe": true, "symbol": "\ud83d\udea6", "label": "Signalized Crossing"}, {"lat": -33.8299671, "lon": 150.9933077, "safe": true, "symbol": "\ud83d\udea6", "label": "Signalized Crossing"}, {"lat": -33.8297209, "lon": 150.9933796, "safe": true, "symbol": "\ud83d\udea6", "label": "Signalized Crossing"}, {"lat": -33.8297535, "lon": 150.9933704, "safe": true, "symbol": "\ud83d\udea6", "label": "Signalized Crossing"}, {"lat": -33.8242764, "lon": 150.994962, "safe": true, "symbol": "\ud83d\udea6", "label": "Signalized Crossing"}, {"lat": -33.8243097, "lon": 150.9949536, "safe": true, "symbol": "\ud83d\udea6", "label": "Signalized Crossing"}, {"lat": -33.8240682, "lon": 150.9950151, "safe": true, "symbol": "\ud83d\udea6", "label": "Signalized Crossing"}, {"lat": -33.8240399, "lon": 150.9950224, "safe": true, "symbol": "\ud83d\udea6", "label": "Signalized Crossing"}];
+        var pois = [];
+
+        var map = L.map('map').setView(center, 14);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OSM, CARTO | OSMFast Bikeability',
+            maxZoom: 22
+        }).addTo(map);
+
+        // Layer groups
+        var layers = {
+            cycleway: L.layerGroup().addTo(map),
+            bike_lane: L.layerGroup().addTo(map),
+            bike_road: L.layerGroup().addTo(map),
+            shared: L.layerGroup().addTo(map),
+            main_road: L.layerGroup().addTo(map),
+            residential: L.layerGroup().addTo(map),
+            other: L.layerGroup().addTo(map),
+            dangerous: L.layerGroup().addTo(map),
+            safe: L.layerGroup().addTo(map),
+            parking: L.layerGroup().addTo(map),
+            rental: L.layerGroup().addTo(map),
+            repair: L.layerGroup().addTo(map),
+            shop: L.layerGroup().addTo(map)
+        };
+
+        var counts = {};
+        for (var key in layers) counts[key] = 0;
+
+        // Draw roads
+        roads.forEach(function(road) {
+            var weight = road.type === 'cycleway' ? 5 : (road.type === 'bike_lane' ? 4 : 2);
+            var opacity = road.type === 'main_road' ? 0.4 : 0.8;
+
+            var popup = '<b>' + (road.name || road.highway) + '</b><br>' +
+                        'Type: ' + road.type + '<br>' +
+                        (road.cycleway ? 'Cycleway: ' + road.cycleway + '<br>' : '') +
+                        (road.surface ? 'Surface: ' + road.surface : '');
+
+            var line = L.polyline(road.coords, {
+                color: road.color,
+                weight: weight,
+                opacity: opacity
+            }).bindPopup(popup);
+
+            if (layers[road.type]) {
+                layers[road.type].addLayer(line);
+                counts[road.type]++;
+            } else {
+                layers.other.addLayer(line);
+            }
+        });
+
+        // Draw intersections
+        intersectionsData.forEach(function(i) {
+            var icon = L.divIcon({
+                className: 'intersection-icon',
+                html: '<div class="intersection-marker" style="border:2px solid ' +
+                      (i.safe ? '#4CAF50' : '#F44336') + '">' + i.symbol + '</div>',
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            });
+
+            var marker = L.marker([i.lat, i.lon], {icon: icon})
+                .bindPopup('<b>' + i.label + '</b><br>' + i.lat.toFixed(6) + ', ' + i.lon.toFixed(6));
+
+            if (i.safe) {
+                layers.safe.addLayer(marker);
+                counts.safe++;
+            } else {
+                layers.dangerous.addLayer(marker);
+                counts.dangerous++;
+            }
+        });
+
+        // Draw POIs
+        pois.forEach(function(poi) {
+            var icon = L.divIcon({
+                className: 'poi-icon',
+                html: '<div class="poi-marker" style="border-color:' + poi.color + '">' + poi.symbol + '</div>',
+                iconSize: [28, 28],
+                iconAnchor: [14, 14]
+            });
+
+            var popup = '<b>' + poi.name + '</b><br>Type: ' + poi.type.replace(/_/g, ' ') +
+                        (poi.capacity ? '<br>Capacity: ' + poi.capacity : '');
+            var marker = L.marker([poi.lat, poi.lon], {icon: icon}).bindPopup(popup);
+
+            if (layers[poi.category]) {
+                layers[poi.category].addLayer(marker);
+                counts[poi.category]++;
+            }
+        });
+
+        // Update counts
+        for (var key in counts) {
+            var el = document.getElementById('count-' + key);
+            if (el && counts[key] > 0) el.textContent = counts[key];
+        }
+
+        function toggleLayer(layerKey) {
+            var checkbox = document.getElementById('layer-' + layerKey);
+            if (checkbox && layers[layerKey]) {
+                if (checkbox.checked) {
+                    map.addLayer(layers[layerKey]);
+                } else {
+                    map.removeLayer(layers[layerKey]);
+                }
+            }
+        }
+
+        // Center marker
+        L.marker(center, {
+            icon: L.divIcon({
+                className: 'center-marker',
+                html: '<div style="width:20px;height:20px;background:#00C853;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3)"></div>',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            })
+        }).addTo(map).bindPopup('<b>Analysis Center</b>');
+
+        // Radius circle
+        L.circle(center, {
+            radius: radius,
+            color: '#00C853',
+            fillColor: '#00C853',
+            fillOpacity: 0.05,
+            weight: 2,
+            dashArray: '5,5'
+        }).addTo(map);
+    </script>
+</body>
+</html>

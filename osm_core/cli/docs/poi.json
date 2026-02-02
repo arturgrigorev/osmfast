@@ -1,0 +1,29 @@
+{
+  "name": "poi",
+  "summary": "Extract points of interest by category",
+  "description": "The poi command extracts points of interest from OSM data, organized into logical categories:\n\n- food: restaurants, cafes, bars, fast food\n- shop: retail stores of all types\n- health: hospitals, clinics, pharmacies\n- education: schools, universities, libraries\n- transport: bus stops, stations, parking\n- tourism: hotels, museums, attractions\n- finance: banks, ATMs\n- service: post offices, police, fire stations\n- worship: churches, mosques, temples, synagogues",
+  "usage": [
+    "osmfast poi map.osm -o pois.geojson",
+    "osmfast poi --category food map.osm -o food.geojson",
+    "osmfast poi --list-categories",
+    "osmfast poi --named-only map.osm -o named_pois.geojson"
+  ],
+  "options": {
+    "-o, --output": "Output file (default: stdout)",
+    "-f, --format": "Output format: geojson, json, csv",
+    "-c, --category": "POI category: food, shop, health, education, transport, tourism, finance, service, worship, all",
+    "--include-ways": "Include POIs from ways (use centroid)",
+    "--named-only": "Only POIs with names",
+    "--stats": "Show statistics only",
+    "--list-categories": "List available categories and exit"
+  },
+  "output": "GeoJSON with properties:\n- id: OSM node/way ID\n- category: POI category\n- type: Specific amenity/shop type\n- name: POI name\n- address: Full address if available\n- phone: Contact phone if tagged\n- website: Website URL if tagged\n- opening_hours: Hours if tagged",
+  "examples": [
+    ["All POIs", "osmfast poi city.osm -o pois.geojson"],
+    ["Restaurants", "osmfast poi --category food city.osm -o food.geojson"],
+    ["Shops", "osmfast poi --category shop city.osm -o shops.geojson"],
+    ["List categories", "osmfast poi --list-categories"]
+  ],
+  "related": ["amenity", "shop", "food", "tourism"],
+  "aliases": ["amenity", "shop", "food", "tourism", "healthcare", "education", "worship"]
+}

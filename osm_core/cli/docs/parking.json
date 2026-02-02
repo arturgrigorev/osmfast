@@ -1,0 +1,25 @@
+{
+  "name": "parking",
+  "summary": "Extract parking facilities",
+  "description": "The parking command extracts parking lots, garages, and spaces from OSM data. Features include:\n\n- Parking type detection (surface, underground, multi-storey, rooftop)\n- Capacity information\n- Access and fee details\n- Area calculation with capacity estimation\n\nUseful for urban planning and navigation applications.",
+  "usage": [
+    "osmfast parking map.osm -o parking.geojson",
+    "osmfast parking map.osm --type multi-storey -o garages.geojson",
+    "osmfast parking map.osm --stats"
+  ],
+  "options": {
+    "--type": "Parking type: surface, underground, multi-storey, rooftop, all (default: all)",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Parking facilities with:\n- parking: Type (surface, underground, etc.)\n- name: Facility name\n- access: Public, private, customers, etc.\n- fee: yes/no\n- capacity: Number of spaces (actual or estimated)\n- operator: Operating company\n- area_sqm: Area in square meters\n- Geometry: Point or Polygon",
+  "examples": [
+    ["All parking", "osmfast parking city.osm -o parking.geojson"],
+    ["Surface lots", "osmfast parking city.osm --type surface -o surface.geojson"],
+    ["Garages", "osmfast parking city.osm --type multi-storey -o garages.geojson"],
+    ["Statistics", "osmfast parking city.osm --stats"],
+    ["CSV output", "osmfast parking city.osm -f csv -o parking.csv"]
+  ],
+  "related": ["amenity", "roads", "poi"]
+}

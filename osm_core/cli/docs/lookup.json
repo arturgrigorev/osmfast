@@ -1,0 +1,29 @@
+{
+  "name": "lookup",
+  "summary": "Find features at or near coordinates",
+  "description": "The lookup command performs reverse geocoding - finding what features exist at or near given coordinates. It:\n\n- Searches nodes and ways within radius\n- Calculates distance to each feature\n- Returns sorted results (nearest first)\n\nUseful for identifying locations on a map.",
+  "usage": [
+    "osmfast lookup map.osm --lat 51.5 --lon -0.1",
+    "osmfast lookup map.osm --lat 51.5 --lon -0.1 --radius 100m",
+    "osmfast lookup map.osm --lat 51.5 --lon -0.1 -o features.geojson"
+  ],
+  "options": {
+    "--lat": "Query latitude (required)",
+    "--lon": "Query longitude (required)",
+    "-r, --radius": "Search radius (default: 50m, e.g., 100m, 1km)",
+    "-n, --limit": "Maximum results (default: 10)",
+    "-t, --type": "Element type: nodes, ways, all (default: all)",
+    "--json": "Output as JSON",
+    "-o, --output": "Output file (GeoJSON)"
+  },
+  "output": "Feature list sorted by distance:\n- Feature type (node/way)\n- Name and description\n- Distance in meters\n- Coordinates\n- All tags",
+  "examples": [
+    ["Basic lookup", "osmfast lookup city.osm --lat 51.5 --lon -0.1"],
+    ["Wider radius", "osmfast lookup city.osm --lat 51.5 --lon -0.1 --radius 500m"],
+    ["More results", "osmfast lookup city.osm --lat 51.5 --lon -0.1 --limit 50"],
+    ["JSON output", "osmfast lookup city.osm --lat 51.5 --lon -0.1 --json"],
+    ["GeoJSON file", "osmfast lookup city.osm --lat 51.5 --lon -0.1 -o nearby.geojson"],
+    ["Nodes only", "osmfast lookup city.osm --lat 51.5 --lon -0.1 --type nodes"]
+  ],
+  "related": ["nearest", "search", "poi", "within"]
+}

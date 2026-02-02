@@ -1,0 +1,28 @@
+{
+  "name": "names",
+  "summary": "Extract all named features",
+  "description": "The names command extracts all features with names from OSM data. Useful for:\n\n- Building geocoding databases\n- Creating search indexes\n- Place name analysis\n- Multilingual name extraction\n\nIncludes importance scoring based on feature type and metadata.",
+  "usage": [
+    "osmfast names map.osm -o names.csv",
+    "osmfast names map.osm --include-alt-names -o names.csv",
+    "osmfast names map.osm --min-importance 5 -o important.csv"
+  ],
+  "options": {
+    "-f, --format": "Output format: csv, json, geojson (default: csv)",
+    "--include-alt-names": "Include alternative names (name:en, old_name, etc.)",
+    "--language": "Filter by language code (e.g., en, de, fr)",
+    "--min-importance": "Minimum importance score 0-10 (default: 0)",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Named features with:\n- name: Primary name\n- feature_type: Category (place, highway, amenity, etc.)\n- feature_value: Specific type (city, primary, restaurant, etc.)\n- importance: Score 0-10 based on feature significance\n- lat, lon: Coordinates\n- alt_names: Alternative names (if requested)",
+  "examples": [
+    ["All names", "osmfast names city.osm -o names.csv"],
+    ["With alt names", "osmfast names city.osm --include-alt-names -o names.csv"],
+    ["Important only", "osmfast names city.osm --min-importance 5 -o important.csv"],
+    ["English names", "osmfast names city.osm --include-alt-names --language en -o names_en.csv"],
+    ["Statistics", "osmfast names city.osm --stats"],
+    ["GeoJSON format", "osmfast names city.osm -f geojson -o names.geojson"]
+  ],
+  "related": ["search", "poi", "address", "lookup"]
+}

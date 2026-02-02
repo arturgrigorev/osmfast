@@ -1,0 +1,26 @@
+{
+  "name": "bikeability",
+  "summary": "Calculate bikeability score for an area",
+  "description": "The bikeability command analyzes cycling infrastructure and calculates a comprehensive bikeability score (0-100). It evaluates:\n\n- Dedicated infrastructure (cycleways, bike lanes, bike roads/Fahrradstrassen)\n- Intersection safety (bike-car crossing danger analysis)\n- Traffic separation (physical separation from car traffic)\n- Road quality (surface types)\n- Network connectivity (connected cycling routes)\n- Bike facilities (parking, rental, repair stations)\n- Traffic calming (low-speed streets, speed limits)\n\nThe analysis considers:\n- Contraflow cycling allowances\n- Segregated paths\n- Signalized bike crossings\n- Dangerous vs safe intersections where bike routes cross car roads\n\nReturns a grade (A+ to F) with detailed breakdown.",
+  "usage": [
+    "osmfast bikeability map.osm",
+    "osmfast bikeability map.osm --lat 51.5 --lon -0.1 --radius 1000",
+    "osmfast bikeability map.osm -f json -o bikeability.json"
+  ],
+  "options": {
+    "--lat": "Center latitude for analysis (default: map center)",
+    "--lon": "Center longitude for analysis (default: map center)",
+    "--radius": "Analysis radius in meters (default: 1000)",
+    "-f, --format": "Output format: text, json, geojson (default: text)",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Bikeability analysis including:\n- Overall score (0-100) and grade (A+ to F)\n- Component scores (infrastructure, intersection safety, separation, connectivity, facilities, traffic calming)\n- Cycling infrastructure breakdown:\n  - Dedicated cycleways (km)\n  - Bike lanes (km)\n  - Bike roads/Fahrradstrassen (km)\n  - Separated from traffic (km)\n  - Contraflow cycling (km)\n- Intersection safety analysis:\n  - Total bike-car intersections\n  - Safe vs dangerous intersections\n  - Signalized crossings\n  - Average intersection safety score\n- Network connectivity metrics\n- Facility counts (parking, rental, repair stations, bike shops)",
+  "examples": [
+    ["Analyze area", "osmfast bikeability city.osm"],
+    ["Specific location", "osmfast bikeability city.osm --lat 51.5 --lon -0.1"],
+    ["Larger radius", "osmfast bikeability city.osm --lat 51.5 --lon -0.1 --radius 2000"],
+    ["JSON output", "osmfast bikeability city.osm -f json -o bikeability.json"],
+    ["GeoJSON", "osmfast bikeability city.osm -f geojson -o bikeability.geojson"]
+  ],
+  "related": ["walkability", "roads", "cycling", "catchment", "network"]
+}

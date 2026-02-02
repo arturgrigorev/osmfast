@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started | OSMFast Documentation</title>
+    <style>
+:root {
+    --red-dark: #c74634;
+    --red: #f80000;
+    --red-light: #ff6b6b;
+    --black: #1a1a1a;
+    --gray-dark: #312d2a;
+    --gray: #6b6b6b;
+    --gray-light: #e8e8e8;
+    --white: #ffffff;
+    --bg: #f5f5f5;
+    --link: #0066cc;
+    --green: #28a745;
+    --blue: #0066cc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Oracle Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--black);
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Header */
+.page-header {
+    background: var(--black);
+    color: var(--white);
+    border-bottom: 4px solid var(--red);
+    padding: 32px 0;
+}
+
+.breadcrumb {
+    font-size: 13px;
+    margin-bottom: 16px;
+}
+
+.breadcrumb a {
+    color: var(--gray-light);
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    color: var(--white);
+}
+
+.breadcrumb span {
+    color: var(--gray);
+    margin: 0 8px;
+}
+
+.page-header h1 {
+    font-size: 32px;
+    font-weight: 400;
+    margin-bottom: 8px;
+}
+
+.page-header .desc {
+    color: var(--gray-light);
+    font-size: 16px;
+}
+
+/* Main content */
+main {
+    padding: 32px 0 64px;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--link);
+    text-decoration: none;
+    font-size: 13px;
+    margin-bottom: 32px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* Table of Contents */
+.toc {
+    background: var(--white);
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    padding: 24px;
+    margin-bottom: 32px;
+}
+
+.toc h2 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gray);
+    margin-bottom: 16px;
+}
+
+.toc ol {
+    list-style: none;
+    counter-reset: toc-counter;
+}
+
+.toc li {
+    counter-increment: toc-counter;
+    margin-bottom: 8px;
+}
+
+.toc li::before {
+    content: counter(toc-counter) ".";
+    color: var(--red-dark);
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.toc a {
+    color: var(--black);
+    text-decoration: none;
+}
+
+.toc a:hover {
+    color: var(--red-dark);
+}
+
+/* Tutorial sections */
+.tutorial-section {
+    background: var(--white);
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.section-header {
+    background: var(--white);
+    padding: 16px 24px;
+    border-bottom: 2px solid var(--red);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.step-number {
+    background: var(--red);
+    color: var(--white);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.section-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--black);
+}
+
+.section-body {
+    padding: 24px;
+}
+
+.section-body p {
+    margin-bottom: 16px;
+    color: var(--gray-dark);
+}
+
+.section-body p:last-child {
+    margin-bottom: 0;
+}
+
+/* Code blocks */
+pre {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 16px 20px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: 'SF Mono', 'Consolas', 'Liberation Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 16px 0;
+}
+
+pre:last-child {
+    margin-bottom: 0;
+}
+
+code {
+    font-family: 'SF Mono', 'Consolas', 'Liberation Mono', monospace;
+    background: var(--bg);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 13px;
+    color: var(--red-dark);
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+}
+
+/* Command output */
+.output {
+    background: #0d1117;
+    color: #8b949e;
+    border-left: 3px solid var(--green);
+}
+
+.output .comment {
+    color: #6a737d;
+}
+
+.output .highlight {
+    color: #58a6ff;
+}
+
+.output .number {
+    color: #79c0ff;
+}
+
+/* Tips and notes */
+.tip {
+    background: #e8f4fd;
+    border-left: 4px solid var(--blue);
+    padding: 16px 20px;
+    margin: 16px 0;
+    border-radius: 0 4px 4px 0;
+}
+
+.tip-title {
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 4px;
+}
+
+.warning {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 16px 20px;
+    margin: 16px 0;
+    border-radius: 0 4px 4px 0;
+}
+
+.warning-title {
+    font-weight: 700;
+    color: #856404;
+    margin-bottom: 4px;
+}
+
+/* Image gallery */
+.image-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.image-item {
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.image-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.image-caption {
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--gray);
+    background: var(--bg);
+    border-top: 1px solid var(--gray-light);
+    text-align: center;
+}
+
+/* Feature list */
+.feature-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
+    background: var(--bg);
+    border-radius: 4px;
+}
+
+.feature-icon {
+    color: var(--green);
+    font-weight: bold;
+}
+
+.feature-text {
+    font-size: 13px;
+    color: var(--gray-dark);
+}
+
+/* Next steps */
+.next-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.next-step-card {
+    background: var(--bg);
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    padding: 20px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.15s;
+}
+
+.next-step-card:hover {
+    border-color: var(--red);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.next-step-card h4 {
+    color: var(--red-dark);
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.next-step-card p {
+    font-size: 12px;
+    color: var(--gray);
+    margin: 0;
+}
+
+/* Footer */
+footer {
+    background: var(--black);
+    color: var(--gray-light);
+    padding: 32px 0;
+}
+
+footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 900px;
+}
+
+footer a {
+    color: var(--gray-light);
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: var(--white);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .image-gallery,
+    .feature-list {
+        grid-template-columns: 1fr;
+    }
+
+    .next-steps {
+        grid-template-columns: 1fr;
+    }
+
+    footer .container {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+}
+</style>
+</head>
+<body>
+    <div class="page-header">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html">Documentation</a>
+                <span>/</span>
+                Getting Started
+            </div>
+            <h1>Getting Started with OSMFast</h1>
+            <p class="desc">A step-by-step guide to extracting and visualizing OpenStreetMap data</p>
+        </div>
+    </div>
+
+    <main>
+        <div class="container">
+            <a href="index.html" class="back-link">
+                <span>&larr;</span> Back to Documentation
+            </a>
+
+            <!-- Table of Contents -->
+            <div class="toc">
+                <h2>In This Guide</h2>
+                <ol>
+                    <li><a href="#installation">Installation</a></li>
+                    <li><a href="#get-data">Getting OSM Data</a></li>
+                    <li><a href="#first-commands">Your First Commands</a></li>
+                    <li><a href="#extract">Extracting Features</a></li>
+                    <li><a href="#filter">Filtering Data</a></li>
+                    <li><a href="#render">Rendering Maps</a></li>
+                    <li><a href="#routing">Routing &amp; Analysis</a></li>
+                    <li><a href="#next-steps">Next Steps</a></li>
+                </ol>
+            </div>
+
+            <!-- Step 1: Installation -->
+            <div class="tutorial-section" id="installation">
+                <div class="section-header">
+                    <div class="step-number">1</div>
+                    <h2>Installation</h2>
+                </div>
+                <div class="section-body">
+                    <p>OSMFast is a pure Python tool with <strong>zero dependencies</strong>. It works with Python 3.7+ on Windows, macOS, and Linux.</p>
+
+                    <pre><code># Clone or download the repository
+git clone https://github.com/osmfast/osmfast.git
+cd osmfast
+
+# Verify installation
+python osmfast.py --help</code></pre>
+
+                    <p>You should see a list of available commands. That's it - no pip install, no virtual environments, no dependencies to manage.</p>
+
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <span class="feature-icon">&#10003;</span>
+                            <span class="feature-text">Pure Python 3 standard library</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">&#10003;</span>
+                            <span class="feature-text">No external dependencies</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">&#10003;</span>
+                            <span class="feature-text">Cross-platform compatible</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">&#10003;</span>
+                            <span class="feature-text">~7,000+ features/second</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Getting OSM Data -->
+            <div class="tutorial-section" id="get-data">
+                <div class="section-header">
+                    <div class="step-number">2</div>
+                    <h2>Getting OSM Data</h2>
+                </div>
+                <div class="section-body">
+                    <p>OSMFast works with <code>.osm</code> XML files. Here's how to get map data for your area of interest:</p>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Option A: OpenStreetMap Export (Small Areas)</h3>
+                    <ol style="margin-left: 20px; color: var(--gray-dark);">
+                        <li>Go to <a href="https://www.openstreetmap.org/export" style="color: var(--link);">openstreetmap.org/export</a></li>
+                        <li>Navigate to your area of interest</li>
+                        <li>Click "Export" to download the .osm file</li>
+                    </ol>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Option B: Geofabrik (Cities, Regions, Countries)</h3>
+                    <ol style="margin-left: 20px; color: var(--gray-dark);">
+                        <li>Visit <a href="https://download.geofabrik.de/" style="color: var(--link);">download.geofabrik.de</a></li>
+                        <li>Navigate to your continent &rarr; country &rarr; region</li>
+                        <li>Download the <code>.osm.bz2</code> file and extract it</li>
+                    </ol>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Option C: Overpass API (Custom Queries)</h3>
+                    <pre><code># Example: Download a specific bounding box
+# Use Overpass Turbo: https://overpass-turbo.eu/</code></pre>
+
+                    <div class="tip">
+                        <div class="tip-title">Tip</div>
+                        For this tutorial, we'll assume you have a file called <code>map.osm</code> in your working directory.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: First Commands -->
+            <div class="tutorial-section" id="first-commands">
+                <div class="section-header">
+                    <div class="step-number">3</div>
+                    <h2>Your First Commands</h2>
+                </div>
+                <div class="section-body">
+                    <p>Let's explore the OSM file to understand what data it contains.</p>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Check File Info</h3>
+                    <pre><code>python osmfast.py info map.osm</code></pre>
+                    <pre class="output"><code>File: map.osm
+Size: 12.4 MB
+Bounds: 49.4521, 11.0234 to 49.4892, 11.0891
+Nodes: 45,231
+Ways: 8,442
+Relations: 156</code></pre>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Get Detailed Statistics</h3>
+                    <pre><code>python osmfast.py stats map.osm</code></pre>
+                    <pre class="output"><code>OSM Statistics for map.osm
+==========================
+Total nodes: 45,231
+Total ways: 8,442
+Total relations: 156
+
+Top Tags:
+  highway: 2,341 ways
+  building: 1,892 ways
+  amenity: 423 nodes
+  name: 1,245 elements
+  ...</code></pre>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Quick Count</h3>
+                    <pre><code>python osmfast.py count map.osm</code></pre>
+                    <pre class="output"><code>nodes: 45231
+ways: 8442
+relations: 156</code></pre>
+
+                    <div class="tip">
+                        <div class="tip-title">Tip</div>
+                        Add <code>--json</code> to any command to get machine-readable JSON output: <code>python osmfast.py stats --json map.osm</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Extracting Features -->
+            <div class="tutorial-section" id="extract">
+                <div class="section-header">
+                    <div class="step-number">4</div>
+                    <h2>Extracting Features</h2>
+                </div>
+                <div class="section-body">
+                    <p>OSMFast provides specialized commands to extract specific feature types. All outputs support GeoJSON, JSON, and CSV formats.</p>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Extract Buildings</h3>
+                    <pre><code># Extract all buildings to GeoJSON
+python osmfast.py buildings map.osm -o buildings.geojson
+
+# Filter by height (for 3D visualization)
+python osmfast.py buildings --min-height 10 map.osm -o tall_buildings.geojson</code></pre>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Extract Roads</h3>
+                    <pre><code># All roads
+python osmfast.py roads map.osm -o roads.geojson
+
+# Only major roads
+python osmfast.py roads --type primary,secondary map.osm -o major_roads.geojson</code></pre>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Extract Points of Interest</h3>
+                    <pre><code># All POIs
+python osmfast.py poi map.osm -o pois.geojson
+
+# Restaurants and cafes
+python osmfast.py food map.osm -o restaurants.geojson
+
+# Shops
+python osmfast.py shop map.osm -o shops.geojson</code></pre>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Generic Extraction</h3>
+                    <pre><code># Extract with custom filters
+python osmfast.py extract --accept-nodes amenity=hospital map.osm -o hospitals.json
+
+# Extract to CSV for spreadsheet analysis
+python osmfast.py extract --format csv --accept-nodes shop=* map.osm -o shops.csv</code></pre>
+
+                    <div class="tip">
+                        <div class="tip-title">Available Extractors</div>
+                        <code>buildings</code>, <code>roads</code>, <code>poi</code>, <code>amenity</code>, <code>shop</code>, <code>food</code>, <code>healthcare</code>, <code>education</code>, <code>tourism</code>, <code>water</code>, <code>landuse</code>, <code>trees</code>, <code>parking</code>, <code>transit</code>, <code>railway</code>, <code>power</code>, and more.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Filtering -->
+            <div class="tutorial-section" id="filter">
+                <div class="section-header">
+                    <div class="step-number">5</div>
+                    <h2>Filtering Data</h2>
+                </div>
+                <div class="section-body">
+                    <p>Use the <code>filter</code> command to create subsets of OSM data. This is useful for reducing file size or preparing data for specific analysis.</p>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Filter by Tag</h3>
+                    <pre><code># Keep only highways
+python osmfast.py filter --accept-ways highway=* map.osm -o roads_only.osm
+
+# Keep restaurants
+python osmfast.py filter --accept-nodes amenity=restaurant map.osm -o restaurants.osm
+
+# Multiple filters (OR logic)
+python osmfast.py filter --accept-ways highway=* --accept-ways railway=* map.osm -o transport.osm</code></pre>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Filter by Bounding Box</h3>
+                    <pre><code># Extract a specific geographic area
+# Format: --bbox min_lat min_lon max_lat max_lon
+python osmfast.py filter --bbox 49.45 11.05 49.48 11.09 map.osm -o downtown.osm</code></pre>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Combine Filters</h3>
+                    <pre><code># Roads in a specific area
+python osmfast.py filter \
+  --bbox 49.45 11.05 49.48 11.09 \
+  --accept-ways highway=* \
+  map.osm -o downtown_roads.osm</code></pre>
+
+                    <div class="warning">
+                        <div class="warning-title">Note</div>
+                        The <code>filter</code> command outputs OSM XML format. Use <code>extract</code> for GeoJSON/CSV output.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Rendering Maps -->
+            <div class="tutorial-section" id="render">
+                <div class="section-header">
+                    <div class="step-number">6</div>
+                    <h2>Rendering Maps</h2>
+                </div>
+                <div class="section-body">
+                    <p>OSMFast can render your OSM data as static images, PDFs, interactive web maps, or 3D visualizations.</p>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">PNG Image</h3>
+                    <pre><code># Basic PNG render
+python osmfast.py render map.osm -o map.png
+
+# Custom size and style
+python osmfast.py render --width 1920 --height 1080 --style dark map.osm -o map_dark.png</code></pre>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Available Styles</h3>
+                    <div class="image-gallery">
+                        <div class="image-item">
+                            <img src="images/render_default.png" alt="Default style">
+                            <div class="image-caption"><code>--style default</code></div>
+                        </div>
+                        <div class="image-item">
+                            <img src="images/render_dark.png" alt="Dark style">
+                            <div class="image-caption"><code>--style dark</code></div>
+                        </div>
+                        <div class="image-item">
+                            <img src="images/render_light.png" alt="Light style">
+                            <div class="image-caption"><code>--style light</code></div>
+                        </div>
+                        <div class="image-item">
+                            <img src="images/render_blueprint.png" alt="Blueprint style">
+                            <div class="image-caption"><code>--style blueprint</code></div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">PDF for Publication</h3>
+                    <pre><code># Publication-ready PDF (no Type 3 fonts)
+python osmfast.py render --format pdf map.osm -o map.pdf
+
+# A4 size for papers
+python osmfast.py render --format pdf --page-size a4 --orientation landscape map.osm -o figure.pdf</code></pre>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Interactive HTML (Leaflet)</h3>
+                    <pre><code># Interactive web map
+python osmfast.py render --format leaflet map.osm -o map.html
+
+# With satellite tiles
+python osmfast.py render --format leaflet --tiles esri-satellite map.osm -o satellite.html</code></pre>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">3D WebGL Visualization</h3>
+                    <pre><code># 3D buildings with Three.js
+python osmfast.py render --format webgl map.osm -o city3d.html
+
+# Dark style 3D
+python osmfast.py render --format webgl --style dark map.osm -o city3d_dark.html</code></pre>
+                </div>
+            </div>
+
+            <!-- Step 7: Routing -->
+            <div class="tutorial-section" id="routing">
+                <div class="section-header">
+                    <div class="step-number">7</div>
+                    <h2>Routing &amp; Analysis</h2>
+                </div>
+                <div class="section-body">
+                    <p>OSMFast includes routing and network analysis capabilities built on the road network in your OSM data.</p>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Find a Route</h3>
+                    <pre><code># Route between two points (lat,lon format)
+python osmfast.py route --from 49.45,11.08 --to 49.46,11.09 map.osm
+
+# Walking route
+python osmfast.py route --from 49.45,11.08 --to 49.46,11.09 --mode walk map.osm
+
+# Save route as GeoJSON
+python osmfast.py route --from 49.45,11.08 --to 49.46,11.09 -o route.geojson map.osm</code></pre>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Multi-Stop Routes</h3>
+                    <pre><code># Route through multiple waypoints
+python osmfast.py route-multi 49.45,11.08 49.46,11.09 49.47,11.10 map.osm</code></pre>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Distance Matrix</h3>
+                    <pre><code># Calculate distances between multiple points
+python osmfast.py distance-matrix points.csv map.osm -o matrix.json</code></pre>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Isochrones (Travel Time Areas)</h3>
+                    <pre><code># Areas reachable within 10 minutes
+python osmfast.py isochrone --from 49.45,11.08 --minutes 10 map.osm -o isochrone.geojson</code></pre>
+
+                    <h3 style="margin: 20px 0 12px; font-size: 15px;">Network Analysis</h3>
+                    <pre><code># Export road network as graph
+python osmfast.py network map.osm -o network.json
+
+# Find network bottlenecks
+python osmfast.py bottleneck map.osm -o bottlenecks.geojson
+
+# Calculate centrality
+python osmfast.py centrality map.osm -o centrality.geojson</code></pre>
+                </div>
+            </div>
+
+            <!-- Step 8: Next Steps -->
+            <div class="tutorial-section" id="next-steps">
+                <div class="section-header">
+                    <div class="step-number">8</div>
+                    <h2>Next Steps</h2>
+                </div>
+                <div class="section-body">
+                    <p>You've learned the basics of OSMFast. Here are some ways to go further:</p>
+
+                    <div class="next-steps">
+                        <a href="index.html#feature-extraction" class="next-step-card">
+                            <h4>Feature Extraction</h4>
+                            <p>Explore all 20+ specialized extractors for buildings, POIs, transit, and more.</p>
+                        </a>
+                        <a href="index.html#spatial-operations" class="next-step-card">
+                            <h4>Spatial Operations</h4>
+                            <p>Learn to clip, buffer, simplify, and transform geometries.</p>
+                        </a>
+                        <a href="index.html#routing-network" class="next-step-card">
+                            <h4>Routing &amp; Network</h4>
+                            <p>Advanced routing with alternatives, isochrones, and network analysis.</p>
+                        </a>
+                    </div>
+
+                    <h3 style="margin: 28px 0 12px; font-size: 15px;">Python API</h3>
+                    <p>OSMFast can also be used as a Python library:</p>
+                    <pre><code>from osm_core import OSMFast, OSMFilter
+
+# Create filter
+osm_filter = OSMFilter()
+osm_filter.add_accept_filter('nodes', 'amenity', 'restaurant')
+osm_filter.set_bounding_box(49.45, 11.05, 49.48, 11.09)
+
+# Extract features
+extractor = OSMFast(osm_filter)
+result = extractor.extract_features('map.osm')
+
+# Access results
+restaurants = result['features']['amenities']
+print(f"Found {len(restaurants)} restaurants")</code></pre>
+
+                    <h3 style="margin: 28px 0 12px; font-size: 15px;">Get Help</h3>
+                    <pre><code># List all commands
+python osmfast.py --help
+
+# Help for a specific command
+python osmfast.py buildings --help
+python osmfast.py route --help</code></pre>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div>OSMFast Documentation</div>
+            <div>
+                <a href="https://github.com/osmfast/osmfast">GitHub</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

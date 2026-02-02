@@ -1,0 +1,32 @@
+{
+  "name": "bbox",
+  "summary": "Calculate and manipulate bounding boxes",
+  "description": "The bbox command calculates and manipulates bounding boxes. It can:\n\n- Calculate bbox from OSM file\n- Create bbox from coordinates or center+radius\n- Add buffer or expand by percentage\n- Output in multiple formats (osmfast, overpass, geojson)\n\nUseful for preparing filter parameters.",
+  "usage": [
+    "osmfast bbox map.osm",
+    "osmfast bbox --from-center 51.5 -0.1 --radius 1000",
+    "osmfast bbox map.osm --buffer 500 -f overpass"
+  ],
+  "options": {
+    "--from-coords": "Create bbox from coordinates (min_lon min_lat max_lon max_lat)",
+    "--from-center": "Create bbox from center point (lat lon)",
+    "--radius": "Radius in meters for --from-center",
+    "--buffer": "Add buffer around bbox (in meters)",
+    "--expand": "Expand bbox by percentage",
+    "--round": "Round coordinates to N decimal places",
+    "-f, --format": "Output format: text, json, geojson, osm, overpass (default: text)",
+    "--copy": "Copy bbox to clipboard",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Bounding box information:\n- Min/Max coordinates\n- Center point\n- Dimensions in km\n- Formatted for various tools",
+  "examples": [
+    ["From file", "osmfast bbox city.osm"],
+    ["From center", "osmfast bbox --from-center 51.5 -0.1 --radius 1000"],
+    ["With buffer", "osmfast bbox city.osm --buffer 500"],
+    ["Expand 10%", "osmfast bbox city.osm --expand 10"],
+    ["Overpass format", "osmfast bbox city.osm -f overpass"],
+    ["GeoJSON", "osmfast bbox city.osm -f geojson -o bbox.geojson"],
+    ["From coords", "osmfast bbox --from-coords -0.2 51.4 0.1 51.6"]
+  ],
+  "related": ["clip", "split", "filter", "extract"]
+}

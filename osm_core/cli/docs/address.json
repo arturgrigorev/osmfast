@@ -1,0 +1,27 @@
+{
+  "name": "address",
+  "summary": "Extract address data",
+  "description": "The address command extracts structured address information from OSM data. It captures:\n\n- House numbers and street names\n- City, postcode, state, country\n- Unit numbers and building names\n- POI names at addresses\n\nUseful for geocoding databases and address analysis.",
+  "usage": [
+    "osmfast address map.osm -o addresses.csv",
+    "osmfast address map.osm --complete-only -o addresses.csv",
+    "osmfast address map.osm --stats"
+  ],
+  "options": {
+    "-f, --format": "Output format: csv, json, geojson (default: csv)",
+    "--complete-only": "Only addresses with street and housenumber",
+    "--include-pois": "Include POI names with addresses",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Address records with fields:\n- housenumber, street, unit\n- city, suburb, postcode\n- state, country\n- name (for POIs)\n- lat, lon coordinates",
+  "examples": [
+    ["All addresses", "osmfast address city.osm -o addresses.csv"],
+    ["Complete only", "osmfast address city.osm --complete-only -o addresses.csv"],
+    ["Statistics", "osmfast address city.osm --stats"],
+    ["GeoJSON", "osmfast address city.osm -f geojson -o addresses.geojson"],
+    ["With POI names", "osmfast address city.osm --include-pois -o addresses.csv"],
+    ["JSON format", "osmfast address city.osm -f json -o addresses.json"]
+  ],
+  "related": ["poi", "buildings", "search"]
+}

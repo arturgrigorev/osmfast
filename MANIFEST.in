@@ -1,0 +1,36 @@
+# Include essential files
+include LICENSE
+include README.md
+include CHANGELOG.md
+include pyproject.toml
+
+# Include all Python source files
+recursive-include osm_core *.py
+recursive-include tests *.py
+
+# Include test data files
+recursive-include tests *.osm *.json *.geojson
+
+# Include type hints marker
+include osm_core/py.typed
+
+# Exclude development and build artifacts
+prune docs
+prune .github
+prune .git
+prune __pycache__
+prune *.egg-info
+prune build
+prune dist
+prune .pytest_cache
+prune .mypy_cache
+prune .coverage
+
+# Exclude generated files
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.pyd
+global-exclude .DS_Store
+global-exclude Thumbs.db
+global-exclude *.so
+global-exclude .gitignore

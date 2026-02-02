@@ -1,0 +1,26 @@
+{
+  "name": "stats",
+  "summary": "Analyze OSM file and display comprehensive statistics",
+  "description": "The stats command provides detailed analysis of an OSM file including:\n- Element counts (nodes, ways, relations)\n- Geographic bounds and center point\n- Tag usage statistics\n- Breakdown of highway, amenity, and building types\n- Processing performance metrics\n\nThis is useful for understanding the contents of an OSM file before processing, or for quality assurance checks.",
+  "usage": [
+    "osmfast stats map.osm",
+    "osmfast stats --summary map.osm",
+    "osmfast stats --json map.osm > stats.json",
+    "osmfast stats --detailed map.osm"
+  ],
+  "options": {
+    "-s, --summary": "Output a single-line summary instead of full report",
+    "-d, --detailed": "Show full detailed analysis (default behavior)",
+    "--json": "Output statistics as JSON for programmatic use",
+    "--suggest-bbox": "Suggest bounding boxes for splitting large files"
+  },
+  "output": "Default output includes:\n- File size and processing rate\n- Node/Way/Relation counts\n- Geographic bounds (min/max lat/lon)\n- Top 10 most used tag keys\n- Highway type breakdown\n- Amenity type breakdown\n- Building type breakdown\n\nJSON output includes all data in machine-readable format.",
+  "examples": [
+    ["Basic statistics", "osmfast stats city.osm"],
+    ["Quick summary", "osmfast stats --summary city.osm"],
+    ["Export to JSON", "osmfast stats --json city.osm > stats.json"],
+    ["Pipe to jq", "osmfast stats --json city.osm | jq '.elements'"]
+  ],
+  "related": ["info", "count", "tags"],
+  "aliases": ["info", "count", "tags"]
+}

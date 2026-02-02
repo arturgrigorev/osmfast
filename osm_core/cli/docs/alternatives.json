@@ -1,0 +1,27 @@
+{
+  "name": "alternatives",
+  "summary": "Find multiple route options",
+  "description": "The alternatives command calculates multiple different routes between two points. Uses edge penalization to find genuinely different routes.\n\nUseful for:\n- Comparing route options\n- Finding scenic alternatives\n- Avoiding specific roads\n- Traffic avoidance planning",
+  "usage": [
+    "osmfast alternatives map.osm --from 51.5,-0.1 --to 51.6,-0.2",
+    "osmfast alternatives map.osm --from 51.5,-0.1 --to 51.6,-0.2 --count 5",
+    "osmfast alternatives map.osm --from 51.5,-0.1 --to 51.6,-0.2 -f geojson -o routes.geojson"
+  ],
+  "options": {
+    "--from": "Origin coordinates as lat,lon (required)",
+    "--to": "Destination coordinates as lat,lon (required)",
+    "-m, --mode": "Travel mode: walk, bike, drive (default: drive)",
+    "-n, --count": "Number of alternatives to find (default: 3)",
+    "-f, --format": "Output format: text, geojson, json (default: text)",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Multiple route alternatives with:\n- Route type (fastest, alternative 1, 2, etc.)\n- Distance and time for each route\n- Time/distance difference from fastest\n- Color-coded route geometries (GeoJSON)",
+  "examples": [
+    ["3 alternatives", "osmfast alternatives city.osm --from 51.5,-0.1 --to 51.6,-0.2"],
+    ["5 alternatives", "osmfast alternatives city.osm --from 51.5,-0.1 --to 51.6,-0.2 --count 5"],
+    ["Walking routes", "osmfast alternatives city.osm --from 51.5,-0.1 --to 51.6,-0.2 --mode walk"],
+    ["GeoJSON output", "osmfast alternatives city.osm --from 51.5,-0.1 --to 51.6,-0.2 -f geojson -o routes.geojson"],
+    ["JSON output", "osmfast alternatives city.osm --from 51.5,-0.1 --to 51.6,-0.2 -f json"]
+  ],
+  "related": ["route", "route-multi", "directions"]
+}

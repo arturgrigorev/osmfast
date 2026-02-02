@@ -1,0 +1,30 @@
+{
+  "name": "unique",
+  "summary": "List unique values for a tag",
+  "description": "The unique command lists all unique values for a specified tag key. Useful for:\n\n- Understanding data distribution\n- Finding all highway types, amenities, etc.\n- Data quality analysis\n- Discovering tag value variations\n\nHandles semicolon-separated values automatically.",
+  "usage": [
+    "osmfast unique map.osm --key highway",
+    "osmfast unique map.osm --key amenity --count --sort count",
+    "osmfast unique map.osm --key surface --min-count 10"
+  ],
+  "options": {
+    "-k, --key": "Tag key to analyze (required)",
+    "-c, --count": "Show counts for each value",
+    "--sort": "Sort order: alpha, count, none (default: count)",
+    "-n, --limit": "Limit to top N values",
+    "--type": "Element type: nodes, ways, all (default: all)",
+    "-f, --format": "Output format: text, json, csv (default: text)",
+    "--min-count": "Only show values with at least N occurrences",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "List of unique values with optional counts and percentages. Shows coverage statistics (how many elements have this tag).",
+  "examples": [
+    ["Highway types", "osmfast unique city.osm --key highway"],
+    ["Amenities with counts", "osmfast unique city.osm --key amenity --count"],
+    ["Surface types", "osmfast unique city.osm --key surface --count --min-count 5"],
+    ["Top 20 cuisines", "osmfast unique city.osm --key cuisine --count --limit 20"],
+    ["Alphabetical", "osmfast unique city.osm --key highway --sort alpha"],
+    ["JSON output", "osmfast unique city.osm --key amenity -f json -o amenities.json"]
+  ],
+  "related": ["tags", "count", "stats", "search"]
+}

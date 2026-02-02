@@ -1,0 +1,28 @@
+{
+  "name": "split",
+  "summary": "Divide large OSM files into smaller parts",
+  "description": "The split command divides large OSM files into smaller tiles. Supports:\n\n- Grid-based splitting (e.g., 2x2, 4x4)\n- Custom bounding boxes from file\n- Splitting into N equal parts\n\nUseful for parallel processing or working with large datasets.",
+  "usage": [
+    "osmfast split large.osm --grid 2x2 -o tiles/",
+    "osmfast split large.osm --count 10 -o parts/",
+    "osmfast split large.osm --bbox-file regions.json -o regions/"
+  ],
+  "options": {
+    "--grid": "Split into grid (e.g., 2x2, 4x4)",
+    "--bbox-file": "File with bounding boxes (JSON or CSV)",
+    "--count": "Split into N roughly equal parts",
+    "--prefix": "Output file prefix (default: tile)",
+    "--format": "Output format: osm, geojson (default: osm)",
+    "-o, --output": "Output directory (required)"
+  },
+  "output": "Multiple output files:\n- One file per tile/region\n- Named with prefix and grid position\n- Complete ways included in each tile",
+  "examples": [
+    ["2x2 grid", "osmfast split large.osm --grid 2x2 -o tiles/"],
+    ["4x4 grid", "osmfast split large.osm --grid 4x4 -o tiles/"],
+    ["10 parts", "osmfast split large.osm --count 10 -o parts/"],
+    ["Custom regions", "osmfast split large.osm --bbox-file districts.json -o districts/"],
+    ["GeoJSON output", "osmfast split large.osm --grid 3x3 --format geojson -o tiles/"],
+    ["Custom prefix", "osmfast split large.osm --grid 2x2 --prefix region -o output/"]
+  ],
+  "related": ["merge", "clip", "filter", "bbox"]
+}

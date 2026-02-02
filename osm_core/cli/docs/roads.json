@@ -1,0 +1,29 @@
+{
+  "name": "roads",
+  "summary": "Extract road network with attributes and geometry calculations",
+  "description": "The roads command extracts the road network from an OSM file with comprehensive attributes:\n\n- Road classification (primary, secondary, residential, etc.)\n- Road name and reference numbers\n- Speed limits (tagged or estimated from road type)\n- Surface type and smoothness\n- Lane count and lane-kilometers\n- One-way restrictions\n- Length, sinuosity, and bearing\n- Infrastructure flags (sidewalk, lighting, bridges, tunnels)\n\nSupports filtering by road hierarchy levels and infrastructure type.",
+  "usage": [
+    "osmfast roads map.osm -o roads.geojson",
+    "osmfast roads --class major map.osm -o highways.geojson",
+    "osmfast roads --named-only map.osm -o named_roads.geojson",
+    "osmfast roads --stats map.osm"
+  ],
+  "options": {
+    "-o, --output": "Output file (default: stdout)",
+    "-f, --format": "Output format: geojson, json, csv, shapefile",
+    "--class": "Road class: major, minor, path, all",
+    "--type": "Specific highway type (e.g., primary, residential)",
+    "--min-length": "Minimum segment length in meters",
+    "--named-only": "Only roads with names",
+    "--stats": "Show statistics only, no export"
+  },
+  "output": "GeoJSON/Shapefile with properties:\n- id: OSM way ID\n- highway: Road type\n- name: Road name\n- ref: Reference number (e.g., A1, M25)\n- maxspeed: Speed limit\n- lanes: Number of lanes\n- surface: Road surface type\n- oneway: One-way restriction\n- length_m: Length in meters\n- length_km: Length in kilometers\n- sinuosity: Curvature ratio (1.0 = straight)\n- bearing: Direction in degrees\n- speed_kph: Effective speed\n- travel_min: Travel time in minutes\n- lane_km: Lane-kilometers\n- has_sidewalk: Sidewalk present\n- is_lit: Street lighting\n- bridge: Bridge type\n- tunnel: Tunnel type",
+  "examples": [
+    ["All roads", "osmfast roads city.osm -o roads.geojson"],
+    ["Major roads only", "osmfast roads --class major city.osm -o highways.geojson"],
+    ["Primary roads", "osmfast roads --type primary city.osm -o primary.geojson"],
+    ["Named roads", "osmfast roads --named-only city.osm -o named.geojson"],
+    ["Road statistics", "osmfast roads --stats city.osm"]
+  ],
+  "related": ["extract", "network", "route", "connectivity"]
+}

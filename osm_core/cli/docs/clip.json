@@ -1,0 +1,24 @@
+{
+  "name": "clip",
+  "summary": "Clip OSM data by polygon",
+  "description": "The clip command extracts OSM data within a polygon boundary. Use a GeoJSON polygon to define the clipping area. Supports:\n\n- Strict clipping (only features fully inside)\n- Complete ways (include entire ways if any node is inside)\n- Multiple output formats",
+  "usage": [
+    "osmfast clip map.osm --polygon boundary.geojson -o clipped.osm",
+    "osmfast clip map.osm --polygon boundary.geojson --complete-ways -o clipped.osm",
+    "osmfast clip map.osm --polygon boundary.geojson -f geojson -o clipped.geojson"
+  ],
+  "options": {
+    "--polygon": "Clipping polygon (GeoJSON file, required)",
+    "--complete-ways": "Include complete ways even if partially outside",
+    "-f, --format": "Output format: osm, geojson (default: osm)",
+    "-o, --output": "Output file (required)"
+  },
+  "output": "Clipped OSM or GeoJSON file containing only features within the polygon boundary.",
+  "examples": [
+    ["Basic clip", "osmfast clip city.osm --polygon district.geojson -o district.osm"],
+    ["Complete ways", "osmfast clip city.osm --polygon district.geojson --complete-ways -o district.osm"],
+    ["GeoJSON output", "osmfast clip city.osm --polygon boundary.geojson -f geojson -o clipped.geojson"],
+    ["Using admin boundary", "osmfast clip country.osm --polygon state_boundary.geojson -o state.osm"]
+  ],
+  "related": ["within", "filter", "split", "bbox"]
+}

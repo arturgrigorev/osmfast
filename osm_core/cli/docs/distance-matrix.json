@@ -1,0 +1,26 @@
+{
+  "name": "distance-matrix",
+  "summary": "Calculate many-to-many distances between points",
+  "description": "The distance-matrix command calculates distances between multiple origin and destination points. Results can be output as a matrix table or detailed routes.\n\nUseful for logistics planning, accessibility analysis, and location optimization.",
+  "usage": [
+    "osmfast distance-matrix map.osm --points \"51.5,-0.1;51.6,-0.2;51.55,-0.15\"",
+    "osmfast distance-matrix map.osm -p locations.csv",
+    "osmfast distance-matrix map.osm --points \"51.5,-0.1;51.6,-0.2\" --mode walk"
+  ],
+  "options": {
+    "-p, --points": "Points as 'lat1,lon1;lat2,lon2;...' or path to CSV file (required)",
+    "-m, --mode": "Travel mode: drive, walk, bike (default: drive)",
+    "--metric": "What to calculate: time, distance, both (default: both)",
+    "-o, --output": "Output file (default: stdout)",
+    "-f, --format": "Output format: text, json, csv"
+  },
+  "output": "Distance matrix showing:\n- Distances between all point pairs (meters)\n- Travel times (minutes)\n- Symmetric or asymmetric matrix\n\nCSV format suitable for spreadsheets and further analysis.",
+  "examples": [
+    ["Three points", "osmfast distance-matrix city.osm --points \"51.5,-0.1;51.6,-0.2;51.55,-0.15\""],
+    ["From CSV file", "osmfast distance-matrix city.osm -p stores.csv"],
+    ["Walking distances", "osmfast distance-matrix city.osm --points \"51.5,-0.1;51.6,-0.2\" --mode walk"],
+    ["Output as CSV", "osmfast distance-matrix city.osm --points \"51.5,-0.1;51.6,-0.2\" -f csv -o matrix.csv"],
+    ["Time only", "osmfast distance-matrix city.osm --points \"51.5,-0.1;51.6,-0.2\" --metric time"]
+  ],
+  "related": ["route", "route-multi", "nearest", "isochrone"]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "tags",
+  "summary": "Explore tag usage in OSM files",
+  "description": "The tags command analyzes and explores tag keys and values in OSM data. It shows:\n\n- Most/least common tag keys\n- Values for a specific key\n- Keys that have a specific value\n- Unique value counts\n\nUseful for understanding data structure and finding relevant tags.",
+  "usage": [
+    "osmfast tags map.osm",
+    "osmfast tags map.osm --key highway",
+    "osmfast tags map.osm --value yes",
+    "osmfast tags map.osm --pattern \"addr:*\""
+  ],
+  "options": {
+    "-k, --key": "Show values for specific tag key",
+    "-v, --value": "Show keys that have this value",
+    "-n, --top": "Number of results to show (default: 20)",
+    "-t, --type": "Element type: nodes, ways, all (default: all)",
+    "--json": "Output as JSON",
+    "--keys-only": "Only show tag keys (no values)",
+    "--rare": "Show rarely used tags (ascending order)",
+    "--pattern": "Filter keys by pattern (e.g., \"addr:*\")",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Tag statistics including:\n- Total unique tag keys\n- Total tag instances\n- Tag counts with sample values\n- Value distribution for specific keys",
+  "examples": [
+    ["Most common tags", "osmfast tags city.osm"],
+    ["Highway tag values", "osmfast tags city.osm --key highway"],
+    ["Address tags", "osmfast tags city.osm --pattern \"addr:*\""],
+    ["Rare tags", "osmfast tags city.osm --rare --top 50"],
+    ["Tags with value 'yes'", "osmfast tags city.osm --value yes"],
+    ["JSON output", "osmfast tags city.osm --json -o tags.json"]
+  ],
+  "related": ["count", "stats", "search"]
+}

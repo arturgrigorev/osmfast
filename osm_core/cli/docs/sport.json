@@ -1,0 +1,27 @@
+{
+  "name": "sport",
+  "summary": "Extract sports facilities",
+  "description": "The sport command extracts sports venues, pitches, and facilities from OSM data. Categories include:\n\n- Ball: soccer, basketball, tennis, cricket, golf, etc.\n- Water: swimming, diving, sailing, rowing, surfing\n- Fitness: gym, yoga, crossfit, weightlifting\n- Cycling: cycling, BMX, mountain biking\n- Athletics: running, track, marathons\n- Combat: boxing, martial arts, fencing\n- Winter: skiing, ice skating, curling\n\nIncludes surface type, lighting, and area calculations.",
+  "usage": [
+    "osmfast sport map.osm -o sports.geojson",
+    "osmfast sport map.osm --sport soccer,tennis -o ball_sports.geojson",
+    "osmfast sport map.osm --category water -o water_sports.geojson"
+  ],
+  "options": {
+    "-s, --sport": "Filter by sport (soccer, tennis, swimming, etc.)",
+    "-c, --category": "Filter by category: ball, water, fitness, cycling, athletics, combat, winter, other",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Sports facilities with:\n- sport: Sport type(s)\n- leisure: Facility type (pitch, sports_centre, etc.)\n- name: Facility name\n- surface: Playing surface\n- lit: Has lighting\n- covered: Is covered/indoor\n- area_sqm: Area in square meters",
+  "examples": [
+    ["All sports", "osmfast sport city.osm -o sports.geojson"],
+    ["Soccer pitches", "osmfast sport city.osm --sport soccer -o soccer.geojson"],
+    ["Tennis courts", "osmfast sport city.osm --sport tennis -o tennis.geojson"],
+    ["Water sports", "osmfast sport city.osm --category water -o water_sports.geojson"],
+    ["Statistics", "osmfast sport city.osm --stats"],
+    ["Multiple sports", "osmfast sport city.osm --sport basketball,volleyball -o courts.geojson"]
+  ],
+  "related": ["leisure", "fitness", "amenity"]
+}

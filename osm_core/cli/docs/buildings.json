@@ -1,0 +1,29 @@
+{
+  "name": "buildings",
+  "summary": "Extract building footprints with height estimation",
+  "description": "The buildings command extracts all building polygons from an OSM file with associated metadata including:\n\n- Building type (residential, commercial, etc.)\n- Height (explicit or estimated from levels)\n- Number of levels/floors\n- Roof type and material\n- Address information\n\nHeight is estimated from building:levels tags when not explicitly set, using a configurable meters-per-floor value.",
+  "usage": [
+    "osmfast buildings map.osm -o buildings.geojson",
+    "osmfast buildings --min-height 10 map.osm -o tall.geojson",
+    "osmfast buildings --type residential map.osm -o houses.geojson",
+    "osmfast buildings --stats map.osm"
+  ],
+  "options": {
+    "-o, --output": "Output file (default: stdout)",
+    "-f, --format": "Output format: geojson, json, csv",
+    "--min-height": "Only buildings >= N meters",
+    "--max-height": "Only buildings <= N meters",
+    "--floor-height": "Meters per floor for estimation (default: 3.0)",
+    "--type": "Filter by building type (e.g., residential, commercial)",
+    "--no-estimate": "Don't estimate height from levels",
+    "--stats": "Show statistics only, no export"
+  },
+  "output": "GeoJSON with properties:\n- id: OSM way ID\n- building: Building type\n- height: Height in meters (actual or estimated)\n- levels: Number of floors\n- name: Building name if tagged\n- address: Full address if available",
+  "examples": [
+    ["All buildings", "osmfast buildings city.osm -o buildings.geojson"],
+    ["Tall buildings", "osmfast buildings --min-height 20 city.osm -o skyscrapers.geojson"],
+    ["Residential only", "osmfast buildings --type residential city.osm -o houses.geojson"],
+    ["Statistics", "osmfast buildings --stats city.osm"]
+  ],
+  "related": ["render", "extract"]
+}

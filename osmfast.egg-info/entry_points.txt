@@ -1,0 +1,3 @@
+[console_scripts]
+osmfast = osm_core.cli:main
+osmfast-gui = osmfast_gui:main

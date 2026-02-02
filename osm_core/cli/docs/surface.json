@@ -1,0 +1,29 @@
+{
+  "name": "surface",
+  "summary": "Analyze road/path surface types",
+  "description": "The surface command analyzes surface type information for roads and paths. Surface categories:\n\n- Paved: asphalt, concrete, paving stones, cobblestone\n- Unpaved: gravel, dirt, earth, grass, sand\n- Special: rubber, tartan, artificial turf, clay\n\nUseful for cycling/walking route planning and infrastructure analysis.",
+  "usage": [
+    "osmfast surface map.osm --stats",
+    "osmfast surface map.osm --category paved -o paved.geojson",
+    "osmfast surface map.osm --unknown-only -o needs_survey.geojson"
+  ],
+  "options": {
+    "-s, --surface": "Filter by surface type (asphalt, gravel, etc.)",
+    "-c, --category": "Filter by category: paved, unpaved, special",
+    "--highway": "Filter by highway type",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--stats": "Show statistics only",
+    "--unknown-only": "Show only ways without surface info",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Surface analysis showing:\n- surface: Surface type\n- smoothness: Surface quality\n- tracktype: Track grade (for tracks)\n- highway: Road type\n- length_m: Segment length\n\nStatistics include coverage percentages by surface type and highway.",
+  "examples": [
+    ["Surface statistics", "osmfast surface city.osm --stats"],
+    ["Paved roads", "osmfast surface city.osm --category paved -o paved.geojson"],
+    ["Gravel roads", "osmfast surface city.osm --surface gravel -o gravel.geojson"],
+    ["Missing surface data", "osmfast surface city.osm --unknown-only -o unknown.geojson"],
+    ["Asphalt paths", "osmfast surface city.osm --surface asphalt --highway path -o paved_paths.geojson"],
+    ["CSV output", "osmfast surface city.osm -f csv -o surfaces.csv"]
+  ],
+  "related": ["roads", "bikeability", "walkability"]
+}

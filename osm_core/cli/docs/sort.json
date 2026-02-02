@@ -1,0 +1,29 @@
+{
+  "name": "sort",
+  "summary": "Sort features by attribute",
+  "description": "The sort command sorts OSM features by a tag value or property. Supports:\n\n- Sorting by any tag (name, population, elevation, etc.)\n- Sorting by built-in properties (id, lat, lon, type)\n- Numeric sorting for numeric values\n- Ascending or descending order\n- Output limiting\n\nUseful for finding extremes or creating ordered lists.",
+  "usage": [
+    "osmfast sort map.osm --by name -o sorted.geojson",
+    "osmfast sort map.osm --by population --numeric --reverse -n 100",
+    "osmfast sort map.osm --filter highway=* --by maxspeed --numeric"
+  ],
+  "options": {
+    "-b, --by": "Sort by: tag name, 'id', 'lat', 'lon', 'type' (required)",
+    "-r, --reverse": "Sort in descending order",
+    "--numeric": "Sort numerically (for numeric tag values)",
+    "--filter": "Filter by tag before sorting (e.g., highway=*)",
+    "-n, --limit": "Limit output to N elements",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "-o, --output": "Output file (required)"
+  },
+  "output": "Sorted features in the specified format, with the sort key included in CSV output.",
+  "examples": [
+    ["Sort by name", "osmfast sort city.osm --by name -o sorted.geojson"],
+    ["Top 100 by population", "osmfast sort city.osm --filter place=* --by population --numeric --reverse -n 100 -o top_places.geojson"],
+    ["Highest elevations", "osmfast sort region.osm --filter natural=peak --by ele --numeric --reverse -n 50 -o highest.geojson"],
+    ["Roads by speed limit", "osmfast sort city.osm --filter highway=* --by maxspeed --numeric --reverse -o fast_roads.geojson"],
+    ["Sort by latitude", "osmfast sort city.osm --by lat -o sorted.geojson"],
+    ["CSV output", "osmfast sort city.osm --by name -f csv -o sorted.csv"]
+  ],
+  "related": ["unique", "head", "filter", "search"]
+}

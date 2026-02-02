@@ -1,0 +1,29 @@
+{
+  "name": "filter",
+  "summary": "Filter OSM data and output filtered OSM",
+  "description": "The filter command applies Osmosis-compatible filters to OSM data and outputs the result as OSM XML. Unlike extract (which outputs JSON/GeoJSON), filter preserves the OSM format for further processing.\n\nThis is useful for:\n- Reducing file size before processing\n- Extracting specific feature types\n- Preparing data for other OSM tools",
+  "usage": [
+    "osmfast filter --accept-ways highway=* map.osm -o roads.osm",
+    "osmfast filter --bbox 49.5 10.9 49.3 11.2 large.osm -o region.osm",
+    "osmfast filter --accept-nodes amenity=* --accept-ways building=* map.osm -o subset.osm"
+  ],
+  "options": {
+    "-o, --output": "Output OSM file (required)",
+    "--accept-nodes": "Accept nodes matching tag filter",
+    "--accept-ways": "Accept ways matching tag filter",
+    "--reject-nodes": "Reject nodes matching tag filter",
+    "--reject-ways": "Reject ways matching tag filter",
+    "--reject-nodes-global": "Reject all nodes",
+    "--reject-ways-global": "Reject all ways",
+    "--reject-relations": "Reject all relations",
+    "--used-node": "Only include nodes referenced by accepted ways",
+    "--bbox": "Bounding box: TOP LEFT BOTTOM RIGHT (lat/lon)"
+  },
+  "output": "OSM XML file containing only elements matching the filters.\nAll referenced nodes are automatically included for way geometry.",
+  "examples": [
+    ["Extract roads", "osmfast filter --accept-ways highway=* city.osm -o roads.osm"],
+    ["Bounding box", "osmfast filter --bbox 49.5 10.9 49.3 11.2 large.osm -o region.osm"],
+    ["Buildings only", "osmfast filter --accept-ways building=* city.osm -o buildings.osm"]
+  ],
+  "related": ["extract", "merge", "clip"]
+}

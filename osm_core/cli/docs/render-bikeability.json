@@ -1,0 +1,26 @@
+{
+  "name": "render-bikeability",
+  "summary": "Generate interactive bikeability map visualization",
+  "description": "The render-bikeability command creates an interactive HTML visualization of cycling infrastructure analysis. The map shows:\n\n- Cycling infrastructure color-coded by type (cycleways, bike lanes, shared paths)\n- Bike roads and designated cycling streets\n- Dangerous intersections where bike routes cross car roads\n- Bike facilities (parking, rental, repair shops)\n- Bikeability score with component breakdown\n- Interactive layer toggles\n\nOpens automatically in browser.",
+  "usage": [
+    "osmfast render-bikeability map.osm --lat 51.5 --lon -0.1",
+    "osmfast render-bikeability map.osm --lat 51.5 --lon -0.1 --radius 1000",
+    "osmfast render-bikeability map.osm --lat 51.5 --lon -0.1 -o mymap.html --no-open"
+  ],
+  "options": {
+    "osm_file": "Input OSM file",
+    "--lat": "Center latitude (required)",
+    "--lon": "Center longitude (required)",
+    "-r, --radius": "Analysis radius in meters (default: 500)",
+    "-o, --output": "Output HTML file (default: bikeability_map.html)",
+    "--no-open": "Do not open browser automatically"
+  },
+  "output": "Interactive HTML map with:\n- Color-coded cycling infrastructure\n- Intersection danger markers\n- Bike facility icons\n- Sidebar with scores and metrics\n- Layer controls for filtering",
+  "examples": [
+    ["Basic map", "osmfast render-bikeability city.osm --lat 51.5 --lon -0.1"],
+    ["Larger area", "osmfast render-bikeability city.osm --lat 51.5 --lon -0.1 --radius 1000"],
+    ["Custom output", "osmfast render-bikeability city.osm --lat 51.5 --lon -0.1 -o analysis.html"],
+    ["No browser", "osmfast render-bikeability city.osm --lat 51.5 --lon -0.1 --no-open"]
+  ],
+  "related": ["bikeability", "render-walkability", "render"]
+}

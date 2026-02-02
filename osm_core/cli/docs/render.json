@@ -1,0 +1,38 @@
+{
+  "name": "render",
+  "summary": "Render OSM data as visual maps (PNG, PDF, HTML, WebGL)",
+  "description": "The render command creates visual representations of OSM data in multiple formats:\n\n- PNG: Static raster images (pure Python, no dependencies)\n- PDF: Publication-ready vector graphics (no Type 3 fonts)\n- HTML/Leaflet: Interactive web maps with tile backgrounds\n- WebGL/3D: 3D visualization with extruded buildings\n\nAll rendering is done with zero external dependencies using pure Python.",
+  "usage": [
+    "osmfast render map.osm -o map.png",
+    "osmfast render map.osm -o map.pdf --page-size a4",
+    "osmfast render map.osm -o map.html --format leaflet",
+    "osmfast render map.osm -o city3d.html --format webgl"
+  ],
+  "options": {
+    "-o, --output": "Output file (required)",
+    "-f, --format": "Output format: png, pdf, html, leaflet, webgl, 3d",
+    "--style": "Color style: default, dark, light, blueprint",
+    "--width": "Image width in pixels (PNG, default: 1024)",
+    "--height": "Image height in pixels (PNG, default: 768)",
+    "--page-size": "PDF page size: letter, a4, a3, a2, legal",
+    "--orientation": "PDF orientation: portrait, landscape",
+    "--dpi": "PDF resolution (default: 300)",
+    "--title": "Map title text",
+    "--filter": "Filter by tag (e.g., highway=*, amenity=restaurant)",
+    "--bbox": "Bounding box to render: MIN_LAT MAX_LAT MIN_LON MAX_LON",
+    "--layer": "Render specific layer: all, roads, buildings, water, pois, landuse",
+    "--tiles": "HTML tile provider: osm, carto-light, carto-dark, esri-satellite",
+    "--no-legend": "Hide legend (PNG)",
+    "--no-scale": "Hide scale bar (PNG)"
+  },
+  "output": "PNG: Raster image with legend and scale bar\nPDF: Vector graphics suitable for publication\nHTML: Interactive map opening in browser\nWebGL: 3D visualization with building extrusions",
+  "examples": [
+    ["Basic PNG", "osmfast render city.osm -o map.png"],
+    ["Dark style", "osmfast render city.osm -o map.png --style dark"],
+    ["A4 PDF", "osmfast render city.osm -o map.pdf --page-size a4"],
+    ["Interactive map", "osmfast render city.osm -o map.html --format leaflet"],
+    ["3D visualization", "osmfast render city.osm -o city3d.html --format webgl"],
+    ["Buildings only", "osmfast render city.osm -o buildings.png --layer buildings"]
+  ],
+  "related": ["buildings", "roads"]
+}

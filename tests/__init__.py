@@ -1,0 +1,1 @@
+"""OSMFast test suite."""

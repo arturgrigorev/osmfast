@@ -1,0 +1,26 @@
+{
+  "name": "route-multi",
+  "summary": "Route through multiple waypoints",
+  "description": "The route-multi command calculates routes visiting multiple waypoints in sequence. Useful for:\n\n- Delivery route planning\n- Multi-stop trip planning\n- Tour routes\n- Sequential location visits\n\nCalculates each leg separately and provides total statistics.",
+  "usage": [
+    "osmfast route-multi map.osm --waypoints \"51.5,-0.1;51.6,-0.2;51.55,-0.15\"",
+    "osmfast route-multi map.osm -w \"51.5,-0.1;51.6,-0.2;51.55,-0.15\" --mode walk",
+    "osmfast route-multi map.osm -w \"51.5,-0.1;51.6,-0.2\" -f geojson -o route.geojson"
+  ],
+  "options": {
+    "-w, --waypoints": "Waypoints as 'lat1,lon1;lat2,lon2;lat3,lon3' (required)",
+    "-m, --mode": "Travel mode: walk, bike, drive (default: drive)",
+    "--optimize": "Optimize for: time, distance (default: time)",
+    "-f, --format": "Output format: text, geojson, json (default: text)",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Multi-waypoint route with:\n- Per-leg distance and time\n- Total distance and time\n- Route geometry through all waypoints\n- Waypoint markers",
+  "examples": [
+    ["Three stops", "osmfast route-multi city.osm -w \"51.5,-0.1;51.6,-0.2;51.55,-0.15\""],
+    ["Walking route", "osmfast route-multi city.osm -w \"51.5,-0.1;51.6,-0.2;51.55,-0.15\" --mode walk"],
+    ["Cycling route", "osmfast route-multi city.osm -w \"51.5,-0.1;51.6,-0.2\" --mode bike"],
+    ["Shortest distance", "osmfast route-multi city.osm -w \"51.5,-0.1;51.6,-0.2\" --optimize distance"],
+    ["GeoJSON output", "osmfast route-multi city.osm -w \"51.5,-0.1;51.6,-0.2\" -f geojson -o route.geojson"]
+  ],
+  "related": ["route", "alternatives", "directions", "distance-matrix"]
+}

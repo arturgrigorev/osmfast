@@ -1,0 +1,25 @@
+{
+  "name": "simplify",
+  "summary": "Reduce geometry complexity",
+  "description": "The simplify command reduces the number of points in geometries using the Douglas-Peucker algorithm. Useful for:\n\n- Reducing file sizes\n- Improving rendering performance\n- Creating generalized maps\n- Web map optimization\n\nSupports tolerance in meters or degrees.",
+  "usage": [
+    "osmfast simplify map.osm --tolerance 10m -o simplified.geojson",
+    "osmfast simplify roads.geojson --tolerance 50m -o simplified.geojson",
+    "osmfast simplify map.osm --tolerance 0.001 --filter highway=* -o roads.geojson"
+  ],
+  "options": {
+    "-t, --tolerance": "Simplification tolerance (e.g., 10m, 50m, 0.001 degrees) - required",
+    "--filter": "Filter features (e.g., highway=*)",
+    "-f, --format": "Output format: geojson, osm (default: geojson)",
+    "-o, --output": "Output file (required)"
+  },
+  "output": "Simplified geometries with reduced point counts. Shows reduction percentage in summary.",
+  "examples": [
+    ["10m tolerance", "osmfast simplify city.osm --tolerance 10m -o simplified.geojson"],
+    ["50m tolerance", "osmfast simplify city.osm --tolerance 50m -o simplified.geojson"],
+    ["Roads only", "osmfast simplify city.osm --tolerance 20m --filter highway=* -o roads.geojson"],
+    ["From GeoJSON", "osmfast simplify input.geojson --tolerance 100m -o simplified.geojson"],
+    ["Fine tolerance", "osmfast simplify city.osm --tolerance 5m -o detailed.geojson"]
+  ],
+  "related": ["densify", "convert", "extract"]
+}

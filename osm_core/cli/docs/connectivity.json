@@ -1,0 +1,25 @@
+{
+  "name": "connectivity",
+  "summary": "Analyze road network connectivity",
+  "description": "The connectivity command analyzes how well connected the road network is. It identifies:\n\n- Number of connected components\n- Size of largest component\n- Isolated road segments\n- Network coverage statistics\n\nUseful for identifying disconnected areas or data quality issues.",
+  "usage": [
+    "osmfast connectivity map.osm",
+    "osmfast connectivity map.osm --mode drive",
+    "osmfast connectivity map.osm --mode walk -f geojson -o components.geojson"
+  ],
+  "options": {
+    "-m, --mode": "Travel mode: drive, walk, bike (default: drive)",
+    "-o, --output": "Output file (default: stdout)",
+    "-f, --format": "Output format: text, json, geojson",
+    "--show-components": "Output all components as GeoJSON"
+  },
+  "output": "Connectivity analysis showing:\n- Total nodes and edges\n- Number of connected components\n- Largest component size and coverage %\n- List of isolated segments (if requested)\n- GeoJSON of components (if geojson format)",
+  "examples": [
+    ["Basic analysis", "osmfast connectivity city.osm"],
+    ["Walking network", "osmfast connectivity city.osm --mode walk"],
+    ["Cycling network", "osmfast connectivity city.osm --mode bike"],
+    ["Export components", "osmfast connectivity city.osm -f geojson -o components.geojson"],
+    ["Show all components", "osmfast connectivity city.osm --show-components"]
+  ],
+  "related": ["network", "bottleneck", "centrality", "roads"]
+}

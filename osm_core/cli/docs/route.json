@@ -1,0 +1,26 @@
+{
+  "name": "route",
+  "summary": "Calculate shortest/fastest path between two points",
+  "description": "The route command finds the optimal path between two points using Dijkstra's algorithm on the OSM road network. It supports different travel modes with appropriate speed limits and access restrictions.\n\nThe output includes the route geometry, total distance, and estimated travel time.",
+  "usage": [
+    "osmfast route --from 49.45,11.08 --to 49.46,11.09 map.osm",
+    "osmfast route --from 49.45,11.08 --to 49.46,11.09 --mode walk map.osm",
+    "osmfast route --from 49.45,11.08 --to 49.46,11.09 -o route.geojson map.osm"
+  ],
+  "options": {
+    "--from": "Origin coordinates as lat,lon (required)",
+    "--to": "Destination coordinates as lat,lon (required)",
+    "--mode, -m": "Travel mode: walk, bike, drive (default: drive)",
+    "--optimize": "Optimize for: time, distance (default: time)",
+    "-o, --output": "Output file (GeoJSON)",
+    "-f, --format": "Output format: geojson, json, text"
+  },
+  "output": "Text: Human-readable route summary with distance and time\nGeoJSON: Route geometry as LineString with properties\nJSON: Structured route data with turn-by-turn segments",
+  "examples": [
+    ["Basic route", "osmfast route --from 51.5,-0.1 --to 51.6,-0.2 london.osm"],
+    ["Walking route", "osmfast route --from 51.5,-0.1 --to 51.6,-0.2 --mode walk london.osm"],
+    ["Save as GeoJSON", "osmfast route --from 51.5,-0.1 --to 51.6,-0.2 -o route.geojson london.osm"]
+  ],
+  "related": ["route-multi", "directions", "isochrone", "network"],
+  "aliases": ["directions", "alternatives", "route-multi", "distance-matrix"]
+}

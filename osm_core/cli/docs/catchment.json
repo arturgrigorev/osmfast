@@ -1,0 +1,29 @@
+{
+  "name": "catchment",
+  "summary": "Generate catchment areas with POI analysis",
+  "description": "The catchment command creates travel time zones showing what's reachable within specified times. It generates:\n\n- Isochrone polygons for multiple travel times\n- POI analysis within each zone\n- Categorized amenity counts\n\nUseful for location analysis, site selection, and accessibility studies.",
+  "usage": [
+    "osmfast catchment map.osm --lat 51.5 --lon -0.1 -o catchment.geojson",
+    "osmfast catchment map.osm --lat 51.5 --lon -0.1 --time 5,10,15,20 --mode walk",
+    "osmfast catchment map.osm --lat 51.5 --lon -0.1 --categories food,healthcare"
+  ],
+  "options": {
+    "--lat": "Origin latitude (required)",
+    "--lon": "Origin longitude (required)",
+    "-t, --time": "Travel times in minutes, comma-separated (default: 5,10,15)",
+    "-m, --mode": "Travel mode: walk, bike, drive (default: walk)",
+    "-c, --categories": "POI categories to analyze (comma-separated)",
+    "-f, --format": "Output format: json, geojson, text (default: geojson)",
+    "--resolution": "Polygon boundary resolution (default: 36)",
+    "-o, --output": "Output file (required)"
+  },
+  "output": "Catchment analysis with:\n- Isochrone polygon for each travel time\n- POI counts by category (healthcare, food, education, etc.)\n- Individual POI locations with travel times\n- Origin point marker",
+  "examples": [
+    ["Basic catchment", "osmfast catchment city.osm --lat 51.5 --lon -0.1 -o catchment.geojson"],
+    ["Custom times", "osmfast catchment city.osm --lat 51.5 --lon -0.1 --time 5,10,20,30 -o catchment.geojson"],
+    ["Cycling mode", "osmfast catchment city.osm --lat 51.5 --lon -0.1 --mode bike -o bike_catchment.geojson"],
+    ["Food and healthcare", "osmfast catchment city.osm --lat 51.5 --lon -0.1 --categories food,healthcare -o catchment.geojson"],
+    ["Driving catchment", "osmfast catchment city.osm --lat 51.5 --lon -0.1 --mode drive --time 5,10,15 -o drive.geojson"]
+  ],
+  "related": ["isochrone", "walkability", "bikeability", "nearest"]
+}

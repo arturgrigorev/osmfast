@@ -1,0 +1,29 @@
+{
+  "name": "sample",
+  "summary": "Random sample of features",
+  "description": "The sample command extracts a random sample of features from OSM data. Supports:\n\n- Fixed count or percentage-based sampling\n- Reproducible results with seed\n- Type and tag filtering\n- Multiple output formats including OSM XML\n\nUseful for testing, data exploration, and creating representative subsets.",
+  "usage": [
+    "osmfast sample map.osm -n 100 -o sample.geojson",
+    "osmfast sample map.osm --percent 5 -o sample.geojson",
+    "osmfast sample map.osm --filter highway=* -n 50 --seed 42"
+  ],
+  "options": {
+    "-n, --count": "Number of features to sample (default: 100)",
+    "-p, --percent": "Percentage of features to sample (overrides --count)",
+    "--type": "Element type: nodes, ways, all (default: all)",
+    "--seed": "Random seed for reproducibility",
+    "--filter": "Filter by tag (e.g., highway=*, amenity=restaurant)",
+    "-f, --format": "Output format: geojson, json, csv, osm (default: geojson)",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Randomly sampled features with full geometry and tags in the specified format.",
+  "examples": [
+    ["100 random features", "osmfast sample city.osm -n 100 -o sample.geojson"],
+    ["5% sample", "osmfast sample city.osm --percent 5 -o sample.geojson"],
+    ["Reproducible sample", "osmfast sample city.osm -n 100 --seed 42 -o sample.geojson"],
+    ["Random highways", "osmfast sample city.osm --filter highway=* -n 50 -o roads_sample.geojson"],
+    ["OSM format", "osmfast sample city.osm -n 100 -f osm -o sample.osm"],
+    ["Ways only", "osmfast sample city.osm --type ways -n 50 -o ways_sample.geojson"]
+  ],
+  "related": ["head", "filter", "extract"]
+}

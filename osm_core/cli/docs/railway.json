@@ -1,0 +1,28 @@
+{
+  "name": "railway",
+  "summary": "Extract rail network",
+  "description": "The railway command extracts railway lines, stations, and infrastructure from OSM data. It includes:\n\n- Rail, light rail, subway, tram lines\n- Stations, halts, and stops\n- Track properties (gauge, electrification)\n- Operator and network information\n\nCalculates total network length.",
+  "usage": [
+    "osmfast railway map.osm -o railway.geojson",
+    "osmfast railway map.osm --type rail -o mainline.geojson",
+    "osmfast railway map.osm --stations-only -o stations.geojson"
+  ],
+  "options": {
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--type": "Railway type: rail, light_rail, subway, tram, all (default: all)",
+    "--lines-only": "Only extract lines (no stations)",
+    "--stations-only": "Only extract stations (no lines)",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Railway features with:\n\nFor lines:\n- railway: Type (rail, tram, subway, etc.)\n- name, ref: Line identification\n- operator: Rail operator\n- electrified, gauge, tracks: Technical details\n- maxspeed: Speed limit\n- length_m: Line segment length\n\nFor stations:\n- type: station, halt, stop\n- name, ref: Station identification\n- platforms: Number of platforms",
+  "examples": [
+    ["All railway", "osmfast railway city.osm -o railway.geojson"],
+    ["Mainline rail", "osmfast railway city.osm --type rail -o mainline.geojson"],
+    ["Tram network", "osmfast railway city.osm --type tram -o tram.geojson"],
+    ["Stations only", "osmfast railway city.osm --stations-only -o stations.geojson"],
+    ["Lines only", "osmfast railway city.osm --lines-only -o lines.geojson"],
+    ["Statistics", "osmfast railway city.osm --stats"]
+  ],
+  "related": ["transit", "roads", "network", "route"]
+}

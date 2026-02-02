@@ -1,0 +1,25 @@
+{
+  "name": "centroid",
+  "summary": "Calculate centroids of ways",
+  "description": "The centroid command calculates centroid points from ways and polygons. Converts complex geometries to simple points representing their center.\n\nUseful for:\n- Creating point layers from building footprints\n- Simplifying polygon data for analysis\n- Generating label points",
+  "usage": [
+    "osmfast centroid map.osm -o centroids.geojson",
+    "osmfast centroid map.osm --filter building=* -o building_centroids.geojson",
+    "osmfast centroid map.osm --include-nodes -o all_points.geojson"
+  ],
+  "options": {
+    "--filter": "Filter ways (e.g., building=*)",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--include-nodes": "Include nodes as-is (they are already points)",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Point features representing centroids with:\n- id: Original element ID\n- type: 'node' or 'way'\n- name: Feature name\n- All original tags\n- node_count: Number of nodes in original way",
+  "examples": [
+    ["All way centroids", "osmfast centroid city.osm -o centroids.geojson"],
+    ["Building centroids", "osmfast centroid city.osm --filter building=* -o buildings.geojson"],
+    ["With nodes", "osmfast centroid city.osm --include-nodes -o all.geojson"],
+    ["Amenity centroids", "osmfast centroid city.osm --filter amenity=* -o amenities.geojson"],
+    ["CSV output", "osmfast centroid city.osm --filter building=* -f csv -o centroids.csv"]
+  ],
+  "related": ["extract", "buildings", "poi"]
+}

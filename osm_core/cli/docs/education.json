@@ -1,0 +1,27 @@
+{
+  "name": "education",
+  "summary": "Extract educational facilities",
+  "description": "The education command extracts schools, universities, and libraries from OSM data. Categories include:\n\n- School: primary, secondary, high schools\n- Higher: universities, colleges\n- Preschool: kindergartens, nurseries, childcare\n- Specialized: language, music, driving schools\n- Other: libraries, training centres\n\nIncludes capacity and operator information.",
+  "usage": [
+    "osmfast education map.osm -o education.geojson",
+    "osmfast education map.osm --category school -o schools.geojson",
+    "osmfast education map.osm --type university -o universities.geojson"
+  ],
+  "options": {
+    "-t, --type": "Filter by type: school, university, library, etc.",
+    "-c, --category": "Filter by category: school, higher, preschool, specialized, other",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Education facilities with:\n- education_type: Facility type\n- name: Institution name\n- operator: Operating organization\n- isced_level: Education level\n- grades: Grade levels served\n- capacity: Student capacity\n- website, phone: Contact info",
+  "examples": [
+    ["All education", "osmfast education city.osm -o education.geojson"],
+    ["Schools only", "osmfast education city.osm --category school -o schools.geojson"],
+    ["Universities", "osmfast education city.osm --type university -o universities.geojson"],
+    ["Libraries", "osmfast education city.osm --type library -o libraries.geojson"],
+    ["Kindergartens", "osmfast education city.osm --type kindergarten -o kindergartens.geojson"],
+    ["Statistics", "osmfast education city.osm --stats"]
+  ],
+  "related": ["amenity", "poi", "catchment"]
+}

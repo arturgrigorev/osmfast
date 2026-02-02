@@ -1,0 +1,27 @@
+{
+  "name": "walkability",
+  "summary": "Calculate walkability index for an area",
+  "description": "The walkability command calculates a walkability score for a location or area based on:\n\n- Proximity to amenities (shops, restaurants, parks)\n- Street connectivity and intersection density\n- Presence of sidewalks and pedestrian paths\n- Access to public transit\n\nHigher scores indicate more walkable areas.",
+  "usage": [
+    "osmfast walkability map.osm --lat 51.5 --lon -0.1",
+    "osmfast walkability map.osm --lat 51.5 --lon -0.1 --radius 800",
+    "osmfast walkability map.osm --grid --grid-size 200"
+  ],
+  "options": {
+    "--lat": "Center latitude for analysis (default: map center)",
+    "--lon": "Center longitude for analysis (default: map center)",
+    "--radius": "Analysis radius in meters (default: 1000)",
+    "--grid": "Calculate walkability for a grid of points",
+    "--grid-size": "Grid cell size in meters (default: 100)",
+    "-o, --output": "Output file (default: stdout)",
+    "-f, --format": "Output format: text, json, geojson"
+  },
+  "output": "Walkability analysis showing:\n- Overall walkability score (0-100)\n- Component scores (amenity access, connectivity, etc.)\n- Amenity counts by category\n- Street network statistics\n- Detailed breakdown of scoring factors",
+  "examples": [
+    ["Point walkability", "osmfast walkability city.osm --lat 51.5 --lon -0.1"],
+    ["Larger radius", "osmfast walkability city.osm --lat 51.5 --lon -0.1 --radius 800"],
+    ["Grid analysis", "osmfast walkability city.osm --grid --grid-size 200"],
+    ["JSON output", "osmfast walkability city.osm --lat 51.5 --lon -0.1 -f json -o walkability.json"]
+  ],
+  "related": ["bikeability", "catchment", "isochrone", "poi"]
+}

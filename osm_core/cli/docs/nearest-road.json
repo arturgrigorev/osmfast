@@ -1,0 +1,26 @@
+{
+  "name": "nearest-road",
+  "summary": "Find nearest point on road network",
+  "description": "The nearest-road command finds the closest point on the road network to a given coordinate. Useful for:\n\n- Map matching (snapping GPS points to roads)\n- Finding road access points\n- Route planning preparation\n- Address geocoding verification\n\nReturns the snapped point, distance, and road information.",
+  "usage": [
+    "osmfast nearest-road map.osm --lat 51.5 --lon -0.1",
+    "osmfast nearest-road map.osm --lat 51.5 --lon -0.1 --mode walk",
+    "osmfast nearest-road map.osm --lat 51.5 --lon -0.1 -f geojson -o snapped.geojson"
+  ],
+  "options": {
+    "--lat": "Query latitude (required)",
+    "--lon": "Query longitude (required)",
+    "-m, --mode": "Travel mode: walk, bike, drive, all (default: all)",
+    "-f, --format": "Output format: text, geojson, json (default: text)",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Nearest road point with:\n- Snapped coordinates\n- Distance from input point (meters)\n- Road name and type\n- Way ID\n\nGeoJSON includes input point, snapped point, connection line, and road segment.",
+  "examples": [
+    ["Basic snap", "osmfast nearest-road city.osm --lat 51.5 --lon -0.1"],
+    ["Walking roads", "osmfast nearest-road city.osm --lat 51.5 --lon -0.1 --mode walk"],
+    ["Driving roads", "osmfast nearest-road city.osm --lat 51.5 --lon -0.1 --mode drive"],
+    ["GeoJSON output", "osmfast nearest-road city.osm --lat 51.5 --lon -0.1 -f geojson -o snap.geojson"],
+    ["JSON output", "osmfast nearest-road city.osm --lat 51.5 --lon -0.1 -f json"]
+  ],
+  "related": ["route", "nearest", "lookup"]
+}

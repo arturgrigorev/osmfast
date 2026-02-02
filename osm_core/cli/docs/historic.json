@@ -1,0 +1,28 @@
+{
+  "name": "historic",
+  "summary": "Extract historic sites and monuments",
+  "description": "The historic command extracts historic features from OSM data. Categories include:\n\n- Monument: monuments, memorials, statues, plaques\n- Building: castles, palaces, forts, ruins, archaeological sites\n- Military: battlefields, bunkers, cannons, wrecks\n- Industrial: mines, mills, kilns, historic railways\n- Other: tombs, cemeteries, wayside crosses\n\nIncludes heritage protection status and Wikipedia links.",
+  "usage": [
+    "osmfast historic map.osm -o historic.geojson",
+    "osmfast historic map.osm --category building -o historic_buildings.geojson",
+    "osmfast historic map.osm --type castle,ruins -o castles.geojson"
+  ],
+  "options": {
+    "-t, --type": "Filter by historic type (e.g., castle, monument)",
+    "-c, --category": "Filter by category: monument, building, military, industrial, other",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--stats": "Show statistics only",
+    "--heritage": "Include heritage protected sites",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Historic features with:\n- historic: Feature type\n- name: Site name\n- description: Site description\n- start_date: Construction/event date\n- heritage: Heritage protection status\n- wikipedia: Wikipedia article link",
+  "examples": [
+    ["All historic", "osmfast historic city.osm -o historic.geojson"],
+    ["Castles", "osmfast historic region.osm --type castle -o castles.geojson"],
+    ["Monuments", "osmfast historic city.osm --category monument -o monuments.geojson"],
+    ["Heritage sites", "osmfast historic city.osm --heritage -o heritage.geojson"],
+    ["Military history", "osmfast historic region.osm --category military -o military.geojson"],
+    ["Statistics", "osmfast historic city.osm --stats"]
+  ],
+  "related": ["tourism", "natural", "poi", "buildings"]
+}

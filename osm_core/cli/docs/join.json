@@ -1,0 +1,29 @@
+{
+  "name": "join",
+  "summary": "Join external data to OSM features",
+  "description": "The join command enriches OSM features with external data from CSV or JSON files. Supports:\n\n- Joining by OSM ID or any tag value\n- Inner or left join modes\n- Column selection and prefixing\n- CSV, JSON, and GeoJSON input data\n\nUseful for combining OSM data with census data, statistics, or custom attributes.",
+  "usage": [
+    "osmfast join map.osm data.csv -o enriched.geojson",
+    "osmfast join map.osm stats.json --osm-key name --data-key place_name -o enriched.geojson",
+    "osmfast join map.osm data.csv --columns population,area --prefix ext_ -o enriched.geojson"
+  ],
+  "options": {
+    "--osm-key": "OSM key to join on: 'id' or tag name (default: id)",
+    "--data-key": "Column/field in data file to join on (default: first column)",
+    "--columns": "Comma-separated list of columns to include (default: all)",
+    "--prefix": "Prefix for joined columns (e.g., 'ext_')",
+    "--how": "Join type: inner (only matches) or left (all OSM features) (default: left)",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "-o, --output": "Output file (required)"
+  },
+  "output": "OSM features enriched with external data columns. Unmatched features (in left join) have null values for external columns.",
+  "examples": [
+    ["Join by ID", "osmfast join city.osm stats.csv -o enriched.geojson"],
+    ["Join by name", "osmfast join city.osm places.csv --osm-key name --data-key place_name -o enriched.geojson"],
+    ["Selected columns", "osmfast join city.osm data.csv --columns population,area -o enriched.geojson"],
+    ["With prefix", "osmfast join city.osm data.csv --prefix census_ -o enriched.geojson"],
+    ["Inner join", "osmfast join city.osm data.csv --how inner -o matched.geojson"],
+    ["From JSON", "osmfast join city.osm attributes.json -o enriched.geojson"]
+  ],
+  "related": ["extract", "filter", "convert"]
+}

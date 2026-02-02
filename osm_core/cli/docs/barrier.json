@@ -1,0 +1,27 @@
+{
+  "name": "barrier",
+  "summary": "Extract barriers (fences, walls, gates)",
+  "description": "The barrier command extracts barrier features from OSM data. Categories include:\n\n- Linear: fences, walls, hedges, retaining walls, guard rails\n- Access: gates, lift gates, toll booths, cattle grids, stiles\n- Blocking: bollards, blocks, jersey barriers, chains\n- Traffic: speed bumps, chicanes, rumble strips\n\nCalculates length for linear barriers.",
+  "usage": [
+    "osmfast barrier map.osm -o barriers.geojson",
+    "osmfast barrier map.osm --type fence,wall -o fences.geojson",
+    "osmfast barrier map.osm --category access -o gates.geojson"
+  ],
+  "options": {
+    "-t, --type": "Filter by barrier type (fence, wall, gate, etc.)",
+    "-c, --category": "Filter by category: linear, access, blocking, traffic",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Barrier features with:\n- barrier: Barrier type\n- material: Construction material\n- height: Barrier height\n- access: Access restrictions\n- bicycle: Bicycle access\n- foot: Pedestrian access\n- length_m: Length in meters (for linear barriers)",
+  "examples": [
+    ["All barriers", "osmfast barrier city.osm -o barriers.geojson"],
+    ["Fences and walls", "osmfast barrier city.osm --type fence,wall -o fences.geojson"],
+    ["Gates only", "osmfast barrier city.osm --category access -o gates.geojson"],
+    ["Bollards", "osmfast barrier city.osm --type bollard -o bollards.geojson"],
+    ["Statistics", "osmfast barrier city.osm --stats"],
+    ["CSV output", "osmfast barrier city.osm -f csv -o barriers.csv"]
+  ],
+  "related": ["roads", "extract", "filter"]
+}

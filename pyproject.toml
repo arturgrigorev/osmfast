@@ -1,0 +1,124 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "osmfast"
+version = "2.0.0"
+description = "Ultra-high performance OpenStreetMap data extraction, analysis, and visualization"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.7"
+authors = [
+    {name = "OSMFast Contributors"}
+]
+maintainers = [
+    {name = "OSMFast Contributors"}
+]
+keywords = [
+    "osm",
+    "openstreetmap",
+    "gis",
+    "geospatial",
+    "mapping",
+    "routing",
+    "geojson",
+    "cli",
+    "data-extraction",
+    "spatial-analysis"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Utilities",
+]
+# Pure Python - zero dependencies!
+dependencies = []
+
+[project.optional-dependencies]
+shapefile = [
+    "pyshp>=2.3.0",
+]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "flake8>=6.0",
+    "mypy>=1.0",
+    "pyshp>=2.3.0",
+]
+all = [
+    "pyshp>=2.3.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/osmfast/osmfast"
+Documentation = "https://github.com/osmfast/osmfast#readme"
+Repository = "https://github.com/osmfast/osmfast"
+Issues = "https://github.com/osmfast/osmfast/issues"
+Changelog = "https://github.com/osmfast/osmfast/blob/main/CHANGELOG.md"
+
+[project.scripts]
+osmfast = "osm_core.cli:main"
+osmfast-gui = "osmfast_gui:main"
+
+[tool.setuptools]
+packages = ["osm_core", "osm_core.models", "osm_core.filters", "osm_core.parsing",
+            "osm_core.extraction", "osm_core.export", "osm_core.utils",
+            "osm_core.cli", "osm_core.cli.commands", "osm_core.rendering",
+            "osm_core.rendering.webgl"]
+py-modules = ["osmfast", "osmfast_gui"]
+
+[tool.setuptools.package-data]
+osm_core = ["py.typed"]
+
+[tool.black]
+line-length = 100
+target-version = ['py37', 'py38', 'py39', 'py310', 'py311', 'py312']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+    | \.mypy_cache
+    | \.pytest_cache
+    | \.venv
+    | build
+    | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.7"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["osm_core"]
+omit = ["tests/*", "osmfast_gui.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]

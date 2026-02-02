@@ -1,0 +1,16 @@
+{
+  "name": "gui",
+  "summary": "Launch graphical user interface",
+  "description": "The gui command launches the OSMFast GUI - a tkinter-based graphical interface for building and running osmfast commands.\n\nFeatures:\n- Command browser organized by category\n- Interactive command builder with autocomplete\n- File browser dialogs for input/output\n- Real-time command preview\n- Output display with syntax highlighting\n- Command history and recent files\n- Quick examples for common operations\n- Usage examples from documentation\n- Related commands navigation",
+  "usage": [
+    "osmfast gui",
+    "python osmfast_gui.py"
+  ],
+  "options": {},
+  "output": "Opens a graphical window with:\n- Left panel: Command browser with search\n- Right panel: Command builder with arguments\n- Bottom: Output display area\n- Menu bar: File, Edit, Run, View, Help",
+  "examples": [
+    ["Launch GUI", "osmfast gui"],
+    ["Direct script", "python osmfast_gui.py"]
+  ],
+  "related": ["help", "version"]
+}

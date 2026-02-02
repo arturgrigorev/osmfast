@@ -1,0 +1,27 @@
+{
+  "name": "landuse",
+  "summary": "Extract land use/cover data",
+  "description": "The landuse command extracts land use and land cover polygons from OSM data. Categories include:\n\n- Residential, commercial, industrial\n- Agricultural (farmland, orchards)\n- Recreation (parks, playgrounds)\n- Natural (forest, grass, scrub)\n- Infrastructure (railway, parking)\n\nCalculates area for all parcels.",
+  "usage": [
+    "osmfast landuse map.osm -o landuse.geojson",
+    "osmfast landuse map.osm --category residential -o residential.geojson",
+    "osmfast landuse map.osm --min-area 10000 --stats"
+  ],
+  "options": {
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--category": "Filter by category: residential, commercial, industrial, agricultural, recreation, institutional, natural, infrastructure, other, all (default: all)",
+    "--min-area": "Minimum area in square meters (default: 0)",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Land use polygons with:\n- landuse: OSM landuse tag value\n- category: Grouped category\n- name: Parcel name\n- area_sqm: Area in square meters\n- area_ha: Area in hectares",
+  "examples": [
+    ["All landuse", "osmfast landuse city.osm -o landuse.geojson"],
+    ["Residential", "osmfast landuse city.osm --category residential -o residential.geojson"],
+    ["Industrial", "osmfast landuse city.osm --category industrial -o industrial.geojson"],
+    ["Large parcels", "osmfast landuse city.osm --min-area 50000 -o large.geojson"],
+    ["Statistics", "osmfast landuse city.osm --stats"],
+    ["Agricultural", "osmfast landuse rural.osm --category agricultural -o farms.geojson"]
+  ],
+  "related": ["natural", "buildings", "boundary", "water"]
+}

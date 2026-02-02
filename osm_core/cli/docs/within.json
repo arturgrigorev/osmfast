@@ -1,0 +1,26 @@
+{
+  "name": "within",
+  "summary": "Find features within polygon",
+  "description": "The within command extracts features that fall inside a polygon boundary. Similar to clip but focused on feature extraction rather than file splitting. Supports:\n\n- Node and way filtering\n- Additional tag filters\n- Multiple output formats\n- Statistics mode",
+  "usage": [
+    "osmfast within map.osm --polygon boundary.geojson -o features.geojson",
+    "osmfast within map.osm --polygon boundary.geojson --filter amenity=* -o amenities.geojson",
+    "osmfast within map.osm --polygon boundary.geojson --stats"
+  ],
+  "options": {
+    "--polygon": "Boundary polygon (GeoJSON file, required)",
+    "--filter": "Additional filter (e.g., amenity=*)",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Features within the polygon boundary with id, type, name, coordinates, and all tags.",
+  "examples": [
+    ["All features", "osmfast within city.osm --polygon district.geojson -o district_features.geojson"],
+    ["Amenities only", "osmfast within city.osm --polygon district.geojson --filter amenity=* -o amenities.geojson"],
+    ["Statistics", "osmfast within city.osm --polygon district.geojson --stats"],
+    ["Shops in area", "osmfast within city.osm --polygon boundary.geojson --filter shop=* -o shops.geojson"],
+    ["CSV output", "osmfast within city.osm --polygon boundary.geojson -f csv -o features.csv"]
+  ],
+  "related": ["clip", "filter", "lookup", "search"]
+}

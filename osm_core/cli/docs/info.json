@@ -1,0 +1,22 @@
+{
+  "name": "info",
+  "summary": "Quick file information",
+  "description": "The info command displays a quick summary of an OSM file. Shows:\n\n- File size\n- Node and way counts\n- Tagged element counts\n- Bounding box\n- Top tags\n\nFaster than full stats - useful for quick file inspection.",
+  "usage": [
+    "osmfast info map.osm",
+    "osmfast info map.osm --json",
+    "osmfast info map.osm --oneline"
+  ],
+  "options": {
+    "--json": "Output as JSON",
+    "--oneline": "Single line output (for scripting)"
+  },
+  "output": "File information including:\n- File name and size\n- Node count (total and tagged)\n- Way count (total and tagged)\n- Bounding box coordinates\n- Top 5 most common tags",
+  "examples": [
+    ["Basic info", "osmfast info city.osm"],
+    ["JSON format", "osmfast info city.osm --json"],
+    ["One-line summary", "osmfast info city.osm --oneline"],
+    ["Multiple files", "for f in *.osm; do osmfast info \"$f\" --oneline; done"]
+  ],
+  "related": ["stats", "count", "tags", "bbox"]
+}

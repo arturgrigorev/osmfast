@@ -1,0 +1,28 @@
+{
+  "name": "network",
+  "summary": "Export road network as graph for analysis",
+  "description": "The network command exports the OSM road network as a graph structure suitable for network analysis, routing algorithms, or visualization in graph tools.\n\nThe graph includes:\n- Nodes at intersections and road endpoints\n- Edges representing road segments\n- Edge weights for distance and travel time\n- Road attributes on edges",
+  "usage": [
+    "osmfast network map.osm -o network.json",
+    "osmfast network map.osm -o network.graphml --format graphml",
+    "osmfast network --mode walk map.osm -o pedestrian.json",
+    "osmfast network --stats map.osm"
+  ],
+  "options": {
+    "-o, --output": "Output file",
+    "-f, --format": "Output format: json, graphml, geojson, csv",
+    "--mode": "Travel mode filter: drive, walk, bike, all",
+    "--directed": "Create directed graph (respects oneway)",
+    "--include-speeds": "Include speed estimates and travel times",
+    "--stats": "Show network statistics only"
+  },
+  "output": "JSON: {nodes: [...], edges: [...]} structure\nGraphML: Standard graph format for Gephi, NetworkX, etc.\nGeoJSON: Edges as LineStrings with properties\nCSV: Edge list with attributes",
+  "examples": [
+    ["JSON network", "osmfast network city.osm -o network.json"],
+    ["GraphML for Gephi", "osmfast network city.osm -o network.graphml --format graphml"],
+    ["Walking network", "osmfast network --mode walk city.osm -o walk.json"],
+    ["With speeds", "osmfast network --include-speeds city.osm -o network.json"]
+  ],
+  "related": ["route", "centrality", "connectivity", "bottleneck"],
+  "aliases": ["centrality", "connectivity", "bottleneck", "detour-factor"]
+}

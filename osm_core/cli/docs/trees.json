@@ -1,0 +1,25 @@
+{
+  "name": "trees",
+  "summary": "Extract trees and tree rows",
+  "description": "The trees command extracts vegetation features from OSM data including:\n\n- Individual trees with species information\n- Tree rows (linear plantings)\n- Woods and forested areas\n\nIncludes botanical details like species, genus, leaf type, and physical dimensions.",
+  "usage": [
+    "osmfast trees map.osm -o trees.geojson",
+    "osmfast trees map.osm --type tree -o individual_trees.geojson",
+    "osmfast trees map.osm --stats"
+  ],
+  "options": {
+    "--type": "Tree feature type: tree, tree_row, wood, all (default: all)",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Tree features with:\n- type: tree, tree_row, or wood\n- species: Scientific species name\n- species_common: Common name\n- genus: Botanical genus\n- leaf_type: broadleaved, needleleaved\n- leaf_cycle: deciduous, evergreen\n- height: Tree height\n- circumference: Trunk circumference\n- diameter_crown: Crown diameter",
+  "examples": [
+    ["All trees", "osmfast trees city.osm -o trees.geojson"],
+    ["Individual trees", "osmfast trees city.osm --type tree -o trees.geojson"],
+    ["Tree rows only", "osmfast trees city.osm --type tree_row -o rows.geojson"],
+    ["Statistics", "osmfast trees city.osm --stats"],
+    ["CSV output", "osmfast trees city.osm -f csv -o trees.csv"]
+  ],
+  "related": ["natural", "landuse", "extract"]
+}

@@ -1,0 +1,28 @@
+{
+  "name": "emergency",
+  "summary": "Extract emergency services and facilities",
+  "description": "The emergency command extracts emergency-related features from OSM data. Categories include:\n\n- Services: fire stations, police, ambulance stations, rescue stations\n- Medical: hospitals, clinics, pharmacies, defibrillators\n- Infrastructure: fire hydrants, emergency phones, sirens, assembly points\n- Safety: life rings, lifeguards, safety equipment\n\nIncludes contact information and accessibility data.",
+  "usage": [
+    "osmfast emergency map.osm -o emergency.geojson",
+    "osmfast emergency map.osm --category services -o services.geojson",
+    "osmfast emergency map.osm --type fire_hydrant -o hydrants.geojson"
+  ],
+  "options": {
+    "-t, --type": "Filter by type (e.g., fire_hydrant, defibrillator)",
+    "-c, --category": "Filter by category: services, medical, infrastructure, safety",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--stats": "Show statistics only",
+    "--include-amenity": "Include amenity=hospital, police, fire_station",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Emergency features with:\n- emergency_type: Feature type\n- name: Facility name\n- operator: Operating organization\n- phone: Emergency contact\n- opening_hours: Hours of operation\n- wheelchair: Accessibility info",
+  "examples": [
+    ["All emergency", "osmfast emergency city.osm -o emergency.geojson"],
+    ["Fire hydrants", "osmfast emergency city.osm --type fire_hydrant -o hydrants.geojson"],
+    ["Defibrillators", "osmfast emergency city.osm --type defibrillator -o aeds.geojson"],
+    ["Emergency services", "osmfast emergency city.osm --category services -o services.geojson"],
+    ["With hospitals", "osmfast emergency city.osm --include-amenity -o all_emergency.geojson"],
+    ["Statistics", "osmfast emergency city.osm --stats"]
+  ],
+  "related": ["healthcare", "amenity", "poi"]
+}

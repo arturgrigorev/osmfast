@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSMFast Documentation</title>
+    <style>
+:root {
+    --red-dark: #c74634;
+    --red: #f80000;
+    --red-light: #ff6b6b;
+    --black: #1a1a1a;
+    --gray-dark: #312d2a;
+    --gray: #6b6b6b;
+    --gray-light: #e8e8e8;
+    --white: #ffffff;
+    --bg: #f5f5f5;
+    --link: #0066cc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Oracle Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--black);
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+header {
+    background: var(--black);
+    color: var(--white);
+    border-bottom: 4px solid var(--red);
+}
+
+.header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--gray-dark);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--white);
+}
+
+.logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--red);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.logo-text {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+.header-links {
+    display: flex;
+    gap: 24px;
+}
+
+.header-links a {
+    color: var(--gray-light);
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.header-links a:hover {
+    color: var(--white);
+}
+
+.header-main {
+    padding: 32px 0;
+}
+
+.header-main h1 {
+    font-size: 32px;
+    font-weight: 300;
+    margin-bottom: 8px;
+}
+
+.header-main p {
+    color: var(--gray-light);
+    font-size: 16px;
+}
+
+.stats-bar {
+    background: var(--gray-dark);
+    padding: 16px 0;
+}
+
+.stats-grid {
+    display: flex;
+    gap: 48px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--white);
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--white);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.85;
+}
+
+nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-light);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 12px 0;
+}
+
+nav .container {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+nav a {
+    display: block;
+    padding: 8px 14px;
+    color: var(--black);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    transition: all 0.15s;
+}
+
+nav a:hover {
+    color: var(--red-dark);
+    border-color: var(--red);
+    background: var(--bg);
+}
+
+.search-box {
+    flex: 1;
+    max-width: 300px;
+    margin-left: auto;
+}
+
+.search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--red);
+}
+
+.command-card.hidden {
+    display: none;
+}
+
+.category.hidden {
+    display: none;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px;
+    color: var(--gray);
+    display: none;
+}
+
+main {
+    padding: 32px 0;
+}
+
+.category {
+    margin-bottom: 48px;
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--gray-light);
+}
+
+.category-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--black);
+}
+
+.category-count {
+    background: var(--gray-light);
+    color: var(--gray);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.commands-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+}
+
+.command-card {
+    background: var(--white);
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    padding: 20px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.15s;
+    display: block;
+}
+
+.command-card:hover {
+    border-color: var(--red);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.command-name {
+    font-family: 'SF Mono', 'Consolas', 'Liberation Mono', monospace;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--red-dark);
+    margin-bottom: 6px;
+}
+
+.command-desc {
+    color: var(--gray);
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+footer {
+    background: var(--black);
+    color: var(--gray-light);
+    padding: 32px 0;
+    margin-top: 48px;
+}
+
+footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+footer a {
+    color: var(--gray-light);
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: var(--white);
+}
+
+@media (max-width: 768px) {
+    .header-top {
+        flex-direction: column;
+        gap: 12px;
+    }
+    .stats-grid {
+        flex-wrap: wrap;
+        gap: 24px;
+    }
+    nav .container {
+        overflow-x: auto;
+    }
+    .commands-grid {
+        grid-template-columns: 1fr;
+    }
+    footer .container {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+}
+</style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">O</div>
+                    <span class="logo-text">OSMFast</span>
+                </a>
+                <div class="header-links">
+                    <a href="getting-started.html">Getting Started</a>
+                    <a href="https://github.com/anthropics/osmfast">GitHub</a>
+                </div>
+            </div>
+            <div class="header-main">
+                <h1>Command Reference</h1>
+                <p>Complete documentation for all OSMFast commands</p>
+            </div>
+        </div>
+        <div class="stats-bar">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">70</div>
+                        <div class="stat-label">Commands</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">9</div>
+                        <div class="stat-label">Categories</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">7,000+</div>
+                        <div class="stat-label">Features/sec</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <a href="#data-extraction">Data Extraction</a><a href="#feature-extraction">Feature Extraction</a><a href="#routing--navigation">Routing & Navigation</a><a href="#network-analysis">Network Analysis</a><a href="#spatial-operations">Spatial Operations</a><a href="#data-analysis">Data Analysis</a><a href="#data-manipulation">Data Manipulation</a><a href="#visualization">Visualization</a><a href="#utility">Utility</a>
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search commands..." autocomplete="off">
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            
+        <div class="category" id="data-extraction">
+            <div class="category-header">
+                <h2>Data Extraction</h2>
+                <span class="category-count">8 commands</span>
+            </div>
+            <div class="commands-grid">
+                
+                <a href="commands/extract.html" class="command-card">
+                    <div class="command-name">extract</div>
+                    <div class="command-desc">Extract features with Osmosis-compatible filtering</div>
+                </a>
+                <a href="commands/filter.html" class="command-card">
+                    <div class="command-name">filter</div>
+                    <div class="command-desc">Filter OSM data and output filtered OSM</div>
+                </a>
+                <a href="commands/convert.html" class="command-card">
+                    <div class="command-name">convert</div>
+                    <div class="command-desc">Convert between file formats</div>
+                </a>
+                <a href="commands/merge.html" class="command-card">
+                    <div class="command-name">merge</div>
+                    <div class="command-desc">Merge multiple OSM files into one</div>
+                </a>
+                <a href="commands/clip.html" class="command-card">
+                    <div class="command-name">clip</div>
+                    <div class="command-desc">Clip OSM data by polygon</div>
+                </a>
+                <a href="commands/split.html" class="command-card">
+                    <div class="command-name">split</div>
+                    <div class="command-desc">Divide large OSM files into smaller parts</div>
+                </a>
+                <a href="commands/sample.html" class="command-card">
+                    <div class="command-name">sample</div>
+                    <div class="command-desc">Random sample of features</div>
+                </a>
+                <a href="commands/head.html" class="command-card">
+                    <div class="command-name">head</div>
+                    <div class="command-desc">First N elements from file</div>
+                </a>
+            </div>
+        </div>
+        <div class="category" id="feature-extraction">
+            <div class="category-header">
+                <h2>Feature Extraction</h2>
+                <span class="category-count">23 commands</span>
+            </div>
+            <div class="commands-grid">
+                
+                <a href="commands/poi.html" class="command-card">
+                    <div class="command-name">poi</div>
+                    <div class="command-desc">Extract points of interest by category</div>
+                </a>
+                <a href="commands/buildings.html" class="command-card">
+                    <div class="command-name">buildings</div>
+                    <div class="command-desc">Extract building footprints with height estimation</div>
+                </a>
+                <a href="commands/roads.html" class="command-card">
+                    <div class="command-name">roads</div>
+                    <div class="command-desc">Extract road network with attributes and geometry calculations</div>
+                </a>
+                <a href="commands/amenity.html" class="command-card">
+                    <div class="command-name">amenity</div>
+                    <div class="command-desc">Extract amenities with category filtering</div>
+                </a>
+                <a href="commands/shop.html" class="command-card">
+                    <div class="command-name">shop</div>
+                    <div class="command-desc">Extract shops with categories</div>
+                </a>
+                <a href="commands/food.html" class="command-card">
+                    <div class="command-name">food</div>
+                    <div class="command-desc">Extract food and drink places</div>
+                </a>
+                <a href="commands/healthcare.html" class="command-card">
+                    <div class="command-name">healthcare</div>
+                    <div class="command-desc">Extract health facilities</div>
+                </a>
+                <a href="commands/education.html" class="command-card">
+                    <div class="command-name">education</div>
+                    <div class="command-desc">Extract educational facilities</div>
+                </a>
+                <a href="commands/tourism.html" class="command-card">
+                    <div class="command-name">tourism</div>
+                    <div class="command-desc">Extract tourism features</div>
+                </a>
+                <a href="commands/leisure.html" class="command-card">
+                    <div class="command-name">leisure</div>
+                    <div class="command-desc">Extract parks, playgrounds, sports</div>
+                </a>
+                <a href="commands/natural.html" class="command-card">
+                    <div class="command-name">natural</div>
+                    <div class="command-desc">Extract natural features</div>
+                </a>
+                <a href="commands/water.html" class="command-card">
+                    <div class="command-name">water</div>
+                    <div class="command-desc">Extract water features</div>
+                </a>
+                <a href="commands/landuse.html" class="command-card">
+                    <div class="command-name">landuse</div>
+                    <div class="command-desc">Extract land use/cover data</div>
+                </a>
+                <a href="commands/trees.html" class="command-card">
+                    <div class="command-name">trees</div>
+                    <div class="command-desc">Extract trees and tree rows</div>
+                </a>
+                <a href="commands/parking.html" class="command-card">
+                    <div class="command-name">parking</div>
+                    <div class="command-desc">Extract parking facilities</div>
+                </a>
+                <a href="commands/transit.html" class="command-card">
+                    <div class="command-name">transit</div>
+                    <div class="command-desc">Extract public transport data</div>
+                </a>
+                <a href="commands/railway.html" class="command-card">
+                    <div class="command-name">railway</div>
+                    <div class="command-desc">Extract rail network</div>
+                </a>
+                <a href="commands/power.html" class="command-card">
+                    <div class="command-name">power</div>
+                    <div class="command-desc">Extract power infrastructure</div>
+                </a>
+                <a href="commands/historic.html" class="command-card">
+                    <div class="command-name">historic</div>
+                    <div class="command-desc">Extract historic sites and monuments</div>
+                </a>
+                <a href="commands/emergency.html" class="command-card">
+                    <div class="command-name">emergency</div>
+                    <div class="command-desc">Extract emergency services and facilities</div>
+                </a>
+                <a href="commands/barrier.html" class="command-card">
+                    <div class="command-name">barrier</div>
+                    <div class="command-desc">Extract barriers (fences, walls, gates)</div>
+                </a>
+                <a href="commands/boundary.html" class="command-card">
+                    <div class="command-name">boundary</div>
+                    <div class="command-desc">Extract administrative boundaries</div>
+                </a>
+                <a href="commands/address.html" class="command-card">
+                    <div class="command-name">address</div>
+                    <div class="command-desc">Extract address data</div>
+                </a>
+            </div>
+        </div>
+        <div class="category" id="routing--navigation">
+            <div class="category-header">
+                <h2>Routing & Navigation</h2>
+                <span class="category-count">9 commands</span>
+            </div>
+            <div class="commands-grid">
+                
+                <a href="commands/route.html" class="command-card">
+                    <div class="command-name">route</div>
+                    <div class="command-desc">Calculate shortest/fastest path between two points</div>
+                </a>
+                <a href="commands/route-multi.html" class="command-card">
+                    <div class="command-name">route-multi</div>
+                    <div class="command-desc">Route through multiple waypoints</div>
+                </a>
+                <a href="commands/directions.html" class="command-card">
+                    <div class="command-name">directions</div>
+                    <div class="command-desc">Generate turn-by-turn navigation directions</div>
+                </a>
+                <a href="commands/isochrone.html" class="command-card">
+                    <div class="command-name">isochrone</div>
+                    <div class="command-desc">Generate travel time polygons (accessibility areas)</div>
+                </a>
+                <a href="commands/alternatives.html" class="command-card">
+                    <div class="command-name">alternatives</div>
+                    <div class="command-desc">Find multiple route options</div>
+                </a>
+                <a href="commands/distance-matrix.html" class="command-card">
+                    <div class="command-name">distance-matrix</div>
+                    <div class="command-desc">Calculate many-to-many distances between points</div>
+                </a>
+                <a href="commands/nearest-road.html" class="command-card">
+                    <div class="command-name">nearest-road</div>
+                    <div class="command-desc">Find nearest point on road network</div>
+                </a>
+                <a href="commands/nearest.html" class="command-card">
+                    <div class="command-name">nearest</div>
+                    <div class="command-desc">Find K nearest features to a point</div>
+                </a>
+                <a href="commands/catchment.html" class="command-card">
+                    <div class="command-name">catchment</div>
+                    <div class="command-desc">Generate catchment areas with POI analysis</div>
+                </a>
+            </div>
+        </div>
+        <div class="category" id="network-analysis">
+            <div class="category-header">
+                <h2>Network Analysis</h2>
+                <span class="category-count">7 commands</span>
+            </div>
+            <div class="commands-grid">
+                
+                <a href="commands/network.html" class="command-card">
+                    <div class="command-name">network</div>
+                    <div class="command-desc">Export road network as graph for analysis</div>
+                </a>
+                <a href="commands/connectivity.html" class="command-card">
+                    <div class="command-name">connectivity</div>
+                    <div class="command-desc">Analyze road network connectivity</div>
+                </a>
+                <a href="commands/centrality.html" class="command-card">
+                    <div class="command-name">centrality</div>
+                    <div class="command-desc">Find most important nodes in road network</div>
+                </a>
+                <a href="commands/bottleneck.html" class="command-card">
+                    <div class="command-name">bottleneck</div>
+                    <div class="command-desc">Identify network chokepoints and critical links</div>
+                </a>
+                <a href="commands/detour-factor.html" class="command-card">
+                    <div class="command-name">detour-factor</div>
+                    <div class="command-desc">Analyze network directness</div>
+                </a>
+                <a href="commands/walkability.html" class="command-card">
+                    <div class="command-name">walkability</div>
+                    <div class="command-desc">Calculate walkability index for an area</div>
+                </a>
+                <a href="commands/bikeability.html" class="command-card">
+                    <div class="command-name">bikeability</div>
+                    <div class="command-desc">Calculate bikeability score for an area</div>
+                </a>
+            </div>
+        </div>
+        <div class="category" id="spatial-operations">
+            <div class="category-header">
+                <h2>Spatial Operations</h2>
+                <span class="category-count">6 commands</span>
+            </div>
+            <div class="commands-grid">
+                
+                <a href="commands/bbox.html" class="command-card">
+                    <div class="command-name">bbox</div>
+                    <div class="command-desc">Calculate and manipulate bounding boxes</div>
+                </a>
+                <a href="commands/within.html" class="command-card">
+                    <div class="command-name">within</div>
+                    <div class="command-desc">Find features within polygon</div>
+                </a>
+                <a href="commands/buffer.html" class="command-card">
+                    <div class="command-name">buffer</div>
+                    <div class="command-desc">Create buffer zones around features</div>
+                </a>
+                <a href="commands/centroid.html" class="command-card">
+                    <div class="command-name">centroid</div>
+                    <div class="command-desc">Calculate centroids of ways</div>
+                </a>
+                <a href="commands/densify.html" class="command-card">
+                    <div class="command-name">densify</div>
+                    <div class="command-desc">Add points to geometries</div>
+                </a>
+                <a href="commands/simplify.html" class="command-card">
+                    <div class="command-name">simplify</div>
+                    <div class="command-desc">Reduce geometry complexity</div>
+                </a>
+            </div>
+        </div>
+        <div class="category" id="data-analysis">
+            <div class="category-header">
+                <h2>Data Analysis</h2>
+                <span class="category-count">7 commands</span>
+            </div>
+            <div class="commands-grid">
+                
+                <a href="commands/stats.html" class="command-card">
+                    <div class="command-name">stats</div>
+                    <div class="command-desc">Analyze OSM file and display comprehensive statistics</div>
+                </a>
+                <a href="commands/count.html" class="command-card">
+                    <div class="command-name">count</div>
+                    <div class="command-desc">Quick element and tag counting</div>
+                </a>
+                <a href="commands/tags.html" class="command-card">
+                    <div class="command-name">tags</div>
+                    <div class="command-desc">Explore tag usage in OSM files</div>
+                </a>
+                <a href="commands/unique.html" class="command-card">
+                    <div class="command-name">unique</div>
+                    <div class="command-desc">List unique values for a tag</div>
+                </a>
+                <a href="commands/names.html" class="command-card">
+                    <div class="command-name">names</div>
+                    <div class="command-desc">Extract all named features</div>
+                </a>
+                <a href="commands/surface.html" class="command-card">
+                    <div class="command-name">surface</div>
+                    <div class="command-desc">Analyze road/path surface types</div>
+                </a>
+                <a href="commands/info.html" class="command-card">
+                    <div class="command-name">info</div>
+                    <div class="command-desc">Quick file information</div>
+                </a>
+            </div>
+        </div>
+        <div class="category" id="data-manipulation">
+            <div class="category-header">
+                <h2>Data Manipulation</h2>
+                <span class="category-count">4 commands</span>
+            </div>
+            <div class="commands-grid">
+                
+                <a href="commands/sort.html" class="command-card">
+                    <div class="command-name">sort</div>
+                    <div class="command-desc">Sort features by attribute</div>
+                </a>
+                <a href="commands/join.html" class="command-card">
+                    <div class="command-name">join</div>
+                    <div class="command-desc">Join external data to OSM features</div>
+                </a>
+                <a href="commands/lookup.html" class="command-card">
+                    <div class="command-name">lookup</div>
+                    <div class="command-desc">Find features at or near coordinates</div>
+                </a>
+                <a href="commands/search.html" class="command-card">
+                    <div class="command-name">search</div>
+                    <div class="command-desc">Search for features by name or tag</div>
+                </a>
+            </div>
+        </div>
+        <div class="category" id="visualization">
+            <div class="category-header">
+                <h2>Visualization</h2>
+                <span class="category-count">2 commands</span>
+            </div>
+            <div class="commands-grid">
+                
+                <a href="commands/render.html" class="command-card">
+                    <div class="command-name">render</div>
+                    <div class="command-desc">Render OSM data as visual maps (PNG, PDF, HTML, WebGL)</div>
+                </a>
+                <a href="commands/render-walkability.html" class="command-card">
+                    <div class="command-name">render-walkability</div>
+                    <div class="command-desc">Generate interactive walkability map</div>
+                </a>
+            </div>
+        </div>
+        <div class="category" id="utility">
+            <div class="category-header">
+                <h2>Utility</h2>
+                <span class="category-count">1 commands</span>
+            </div>
+            <div class="commands-grid">
+                
+                <a href="commands/gui.html" class="command-card">
+                    <div class="command-name">gui</div>
+                    <div class="command-desc">Launch graphical user interface</div>
+                </a>
+            </div>
+        </div>
+            <div class="no-results" id="noResults">No commands found matching your search.</div>
+        </div>
+    </main>
+
+    <script>
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase().trim();
+        const cards = document.querySelectorAll('.command-card');
+        const categories = document.querySelectorAll('.category');
+        const noResults = document.getElementById('noResults');
+        let hasResults = false;
+
+        cards.forEach(card => {
+            const name = card.querySelector('.command-name').textContent.toLowerCase();
+            const desc = card.querySelector('.command-desc').textContent.toLowerCase();
+            const matches = query === '' || name.includes(query) || desc.includes(query);
+            card.classList.toggle('hidden', !matches);
+            if (matches) hasResults = true;
+        });
+
+        // Hide empty categories
+        categories.forEach(cat => {
+            const visibleCards = cat.querySelectorAll('.command-card:not(.hidden)');
+            cat.classList.toggle('hidden', visibleCards.length === 0);
+        });
+
+        noResults.style.display = (query && !hasResults) ? 'block' : 'none';
+    });
+    </script>
+
+    <footer>
+        <div class="container">
+            <div>OSMFast Documentation - Generated from JSON</div>
+            <div>
+                <a href="https://github.com/anthropics/osmfast">GitHub</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

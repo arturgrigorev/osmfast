@@ -1,0 +1,28 @@
+{
+  "name": "food",
+  "summary": "Extract food and drink places",
+  "description": "The food command extracts restaurants, cafes, and bars from OSM data with cuisine details. Supports filtering by:\n\n- Type: restaurant, cafe, fast_food, bar, pub\n- Cuisine: italian, chinese, indian, etc.\n- Cuisine category: asian, european, american, middle_eastern\n\nIncludes service information (takeaway, delivery, outdoor seating).",
+  "usage": [
+    "osmfast food map.osm -o restaurants.geojson",
+    "osmfast food map.osm --cuisine italian -o italian.geojson",
+    "osmfast food map.osm --type cafe -o cafes.geojson"
+  ],
+  "options": {
+    "-t, --type": "Filter by type: restaurant, cafe, fast_food, bar, pub, etc.",
+    "-c, --cuisine": "Filter by cuisine: italian, chinese, indian, etc.",
+    "--cuisine-category": "Filter by category: asian, european, american, middle_eastern, fast_food, other",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Food places with:\n- amenity: Type (restaurant, cafe, etc.)\n- name: Business name\n- cuisine: Cuisine type(s)\n- opening_hours: Business hours\n- phone, website: Contact info\n- takeaway, delivery: Service options\n- outdoor_seating: Patio availability",
+  "examples": [
+    ["All restaurants", "osmfast food city.osm -o restaurants.geojson"],
+    ["Cafes only", "osmfast food city.osm --type cafe -o cafes.geojson"],
+    ["Asian cuisine", "osmfast food city.osm --cuisine-category asian -o asian.geojson"],
+    ["Italian restaurants", "osmfast food city.osm --cuisine italian -o italian.geojson"],
+    ["Statistics", "osmfast food city.osm --stats"],
+    ["Bars and pubs", "osmfast food city.osm --type bar,pub -o nightlife.geojson"]
+  ],
+  "related": ["amenity", "shop", "poi"]
+}

@@ -1,0 +1,28 @@
+{
+  "name": "amenity",
+  "summary": "Extract amenities with category filtering",
+  "description": "The amenity command extracts amenity features from OSM data. Amenities include restaurants, banks, hospitals, schools, and many other points of interest.\n\nSupports filtering by amenity type and other tags.",
+  "usage": [
+    "osmfast amenity map.osm -o amenities.geojson",
+    "osmfast amenity map.osm --type restaurant -o restaurants.geojson",
+    "osmfast amenity map.osm --type hospital,clinic -o healthcare.geojson",
+    "osmfast amenity map.osm --list-types"
+  ],
+  "options": {
+    "-t, --type": "Amenity type to extract (can be repeated, e.g., --type restaurant --type cafe)",
+    "-c, --category": "Filter by category: food, education, health, transport, finance, worship, civic",
+    "--list-types": "List all amenity types found in file",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)",
+    "-f, --format": "Output format: geojson, json, csv"
+  },
+  "output": "GeoJSON with properties:\n- id: OSM ID\n- amenity: Amenity type\n- name: Feature name\n- opening_hours: Operating hours\n- phone, website, email: Contact info\n- addr:*: Address fields\n- wheelchair: Accessibility info",
+  "examples": [
+    ["All amenities", "osmfast amenity city.osm -o amenities.geojson"],
+    ["Restaurants only", "osmfast amenity city.osm --type restaurant -o restaurants.geojson"],
+    ["Healthcare facilities", "osmfast amenity city.osm --type hospital,clinic,pharmacy -o healthcare.geojson"],
+    ["Banks and ATMs", "osmfast amenity city.osm --type bank,atm -o banking.geojson"],
+    ["List available types", "osmfast amenity city.osm --list-types"]
+  ],
+  "related": ["poi", "food", "healthcare", "education", "shop"]
+}

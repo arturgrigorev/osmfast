@@ -1,0 +1,19 @@
+{
+  "name": "merge",
+  "summary": "Merge multiple OSM files into one",
+  "description": "The merge command combines multiple OSM files into a single file. It handles:\n\n- Duplicate element detection and removal\n- Consistent ID management\n- Metadata preservation\n- Large file handling with streaming\n\nUseful for combining regional extracts or assembling data from multiple sources.",
+  "usage": [
+    "osmfast merge file1.osm file2.osm -o combined.osm",
+    "osmfast merge *.osm -o merged.osm"
+  ],
+  "options": {
+    "-o, --output": "Output OSM file (required)",
+    "-q, --quiet": "Suppress progress output"
+  },
+  "output": "OSM XML file containing all unique elements from input files.\nDuplicate elements (same ID and type) are included only once.",
+  "examples": [
+    ["Merge two files", "osmfast merge north.osm south.osm -o region.osm"],
+    ["Merge all in directory", "osmfast merge tiles/*.osm -o complete.osm"]
+  ],
+  "related": ["filter", "split", "extract"]
+}

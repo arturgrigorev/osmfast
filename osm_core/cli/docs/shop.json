@@ -1,0 +1,28 @@
+{
+  "name": "shop",
+  "summary": "Extract shops with categories",
+  "description": "The shop command extracts retail shops from OSM data. Categories include:\n\n- Food: supermarkets, bakeries, butchers, etc.\n- Clothing: clothes, shoes, jewelry\n- Electronics: computers, phones, appliances\n- Health: pharmacies, opticians\n- Home: furniture, kitchen, decor\n- DIY: hardware, garden centres\n- Sports: outdoor, bicycles, fishing\n- Beauty: cosmetics, hairdressers\n- Car: car parts, repair, tyres",
+  "usage": [
+    "osmfast shop map.osm -o shops.geojson",
+    "osmfast shop map.osm --category food -o food_shops.geojson",
+    "osmfast shop map.osm --type supermarket,bakery -o grocery.geojson"
+  ],
+  "options": {
+    "-t, --type": "Filter by shop type (e.g., supermarket, bakery)",
+    "-c, --category": "Filter by category: food, clothing, electronics, health, home, diy, sports, beauty, car, other",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--stats": "Show statistics only",
+    "--list-types": "List all shop types found",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Shop features with:\n- shop: Shop type\n- name: Shop name\n- brand: Brand name\n- opening_hours: Business hours\n- Coordinates",
+  "examples": [
+    ["All shops", "osmfast shop city.osm -o shops.geojson"],
+    ["Food shops", "osmfast shop city.osm --category food -o food.geojson"],
+    ["Supermarkets", "osmfast shop city.osm --type supermarket -o supermarkets.geojson"],
+    ["Multiple types", "osmfast shop city.osm --type bakery,butcher -o food.geojson"],
+    ["Statistics", "osmfast shop city.osm --stats"],
+    ["List types", "osmfast shop city.osm --list-types"]
+  ],
+  "related": ["food", "amenity", "poi"]
+}

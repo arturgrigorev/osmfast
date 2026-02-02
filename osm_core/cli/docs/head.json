@@ -1,0 +1,28 @@
+{
+  "name": "head",
+  "summary": "First N elements from file",
+  "description": "The head command extracts the first N elements from an OSM file. Similar to Unix 'head' command but for OSM data. Supports:\n\n- Filtering by element type (nodes/ways)\n- Tag filtering\n- Skip and limit for pagination\n\nUseful for quick file inspection and testing.",
+  "usage": [
+    "osmfast head map.osm",
+    "osmfast head map.osm -n 50",
+    "osmfast head map.osm --filter highway=* -n 20"
+  ],
+  "options": {
+    "-n, --count": "Number of elements (default: 10)",
+    "--type": "Element type: nodes, ways, all (default: all)",
+    "--filter": "Filter by tag (e.g., highway=*, amenity=restaurant)",
+    "-f, --format": "Output format: text, geojson, json, csv (default: text)",
+    "--skip": "Skip first N elements before selecting",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Selected elements showing:\n- Element ID and type\n- Location coordinates\n- Tags (first 10 shown in text mode)",
+  "examples": [
+    ["First 10 elements", "osmfast head city.osm"],
+    ["First 50 elements", "osmfast head city.osm -n 50"],
+    ["First highways", "osmfast head city.osm --filter highway=* -n 20"],
+    ["First restaurants", "osmfast head city.osm --filter amenity=restaurant"],
+    ["Skip first 100", "osmfast head city.osm --skip 100 -n 20"],
+    ["GeoJSON output", "osmfast head city.osm -n 100 -f geojson -o first100.geojson"]
+  ],
+  "related": ["sample", "count", "tags", "info"]
+}

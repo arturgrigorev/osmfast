@@ -1,0 +1,27 @@
+{
+  "name": "natural",
+  "summary": "Extract natural features",
+  "description": "The natural command extracts natural features from OSM data. Categories include:\n\n- Landform: peaks, hills, cliffs, caves, rocks\n- Vegetation: woods, trees, scrub, grassland\n- Water: springs, hot springs, geysers, wetlands\n- Coastal: beaches, coastlines, capes, peninsulas\n\nIncludes elevation data for peaks and other features.",
+  "usage": [
+    "osmfast natural map.osm -o natural.geojson",
+    "osmfast natural map.osm --category landform -o landforms.geojson",
+    "osmfast natural map.osm --type peak,cliff -o features.geojson"
+  ],
+  "options": {
+    "-t, --type": "Filter by natural type (e.g., peak, beach)",
+    "-c, --category": "Filter by category: landform, vegetation, water, coastal",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Natural features with:\n- natural: Feature type\n- name: Feature name\n- elevation: Height in meters (for peaks)\n- Geometry: Point, LineString, or Polygon",
+  "examples": [
+    ["All natural", "osmfast natural region.osm -o natural.geojson"],
+    ["Peaks only", "osmfast natural region.osm --type peak -o peaks.geojson"],
+    ["Landforms", "osmfast natural region.osm --category landform -o landforms.geojson"],
+    ["Beaches", "osmfast natural coastal.osm --type beach -o beaches.geojson"],
+    ["Statistics", "osmfast natural region.osm --stats"],
+    ["Water features", "osmfast natural region.osm --category water -o water.geojson"]
+  ],
+  "related": ["water", "landuse", "poi", "extract"]
+}

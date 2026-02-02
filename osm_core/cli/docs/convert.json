@@ -1,0 +1,32 @@
+{
+  "name": "convert",
+  "summary": "Convert between file formats",
+  "description": "The convert command transforms OSM files to various formats. Supports:\n\n- GeoJSON with proper geometry\n- Plain JSON structure\n- CSV with flattened tags\n- OSM XML\n\nOptionally calculates area and length for features.",
+  "usage": [
+    "osmfast convert map.osm -o map.geojson",
+    "osmfast convert map.osm -o map.csv --flatten-tags",
+    "osmfast convert map.osm -o map.json --include-area --include-length"
+  ],
+  "options": {
+    "-f, --format": "Output format: geojson, json, csv, osm (auto-detect from extension)",
+    "--nodes-only": "Only convert nodes",
+    "--ways-only": "Only convert ways",
+    "--tagged-only": "Only elements with tags",
+    "--include-area": "Calculate area for polygons",
+    "--include-length": "Calculate length for ways",
+    "--flatten-tags": "Flatten tags into columns (CSV)",
+    "--compact": "Compact output (no indentation)",
+    "-o, --output": "Output file (required)"
+  },
+  "output": "Converted file in specified format:\n- GeoJSON: Point/LineString/Polygon geometries\n- JSON: Nodes and ways with coordinates\n- CSV: Tabular data with optional flattened tags\n- OSM: Standard OSM XML format",
+  "examples": [
+    ["To GeoJSON", "osmfast convert city.osm -o city.geojson"],
+    ["To CSV", "osmfast convert city.osm -o city.csv"],
+    ["With area/length", "osmfast convert city.osm -o city.geojson --include-area --include-length"],
+    ["Flattened CSV", "osmfast convert city.osm -o city.csv --flatten-tags"],
+    ["Ways only", "osmfast convert city.osm -o roads.geojson --ways-only"],
+    ["Tagged only", "osmfast convert city.osm -o features.geojson --tagged-only"],
+    ["Compact JSON", "osmfast convert city.osm -o city.json --compact"]
+  ],
+  "related": ["extract", "filter", "merge"]
+}

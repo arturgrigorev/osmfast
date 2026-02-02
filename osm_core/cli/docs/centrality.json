@@ -1,0 +1,25 @@
+{
+  "name": "centrality",
+  "summary": "Find most important nodes in road network",
+  "description": "The centrality command identifies the most important nodes in the road network using betweenness centrality. High-centrality nodes are critical junctions where many routes pass through.\n\nUses sampling for large networks to maintain reasonable performance.",
+  "usage": [
+    "osmfast centrality map.osm",
+    "osmfast centrality map.osm --top 20",
+    "osmfast centrality map.osm -f geojson -o central.geojson"
+  ],
+  "options": {
+    "-n, --top": "Number of top central nodes to return (default: 20)",
+    "--sample": "Sample size for betweenness calculation (default: 100)",
+    "-o, --output": "Output file (default: stdout)",
+    "-f, --format": "Output format: text, json, geojson"
+  },
+  "output": "List of most central nodes with:\n- Rank and centrality score\n- Node coordinates\n- Connected road names\n- Degree (number of connections)\n\nGeoJSON output includes point features for each central node.",
+  "examples": [
+    ["Find top 10 junctions", "osmfast centrality city.osm"],
+    ["Top 20 central nodes", "osmfast centrality city.osm --top 20"],
+    ["Top 50 with short form", "osmfast centrality city.osm -n 50"],
+    ["Export as GeoJSON", "osmfast centrality city.osm -f geojson -o junctions.geojson"],
+    ["Higher accuracy", "osmfast centrality city.osm --sample 500"]
+  ],
+  "related": ["connectivity", "bottleneck", "network", "route"]
+}

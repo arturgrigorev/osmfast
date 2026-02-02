@@ -1,0 +1,26 @@
+{
+  "name": "water",
+  "summary": "Extract water features",
+  "description": "The water command extracts rivers, lakes, and other water features from OSM data. It identifies:\n\n- Rivers and streams\n- Lakes and ponds\n- Canals and waterways\n- Coastlines and bays\n- Springs and waterfalls\n\nCalculates area for water bodies.",
+  "usage": [
+    "osmfast water map.osm -o water.geojson",
+    "osmfast water map.osm --type river -o rivers.geojson",
+    "osmfast water map.osm --stats"
+  ],
+  "options": {
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--type": "Water feature type: river, lake, stream, canal, coastline, all (default: all)",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Water features with:\n- water_type: Type of water feature\n- name: Feature name\n- area_sqm: Area in square meters (for polygons)\n- Geometry: Point, LineString, or Polygon",
+  "examples": [
+    ["All water", "osmfast water city.osm -o water.geojson"],
+    ["Rivers only", "osmfast water city.osm --type river -o rivers.geojson"],
+    ["Lakes only", "osmfast water city.osm --type lake -o lakes.geojson"],
+    ["Statistics", "osmfast water city.osm --stats"],
+    ["CSV output", "osmfast water city.osm -f csv -o water.csv"],
+    ["Coastline", "osmfast water coastal.osm --type coastline -o coast.geojson"]
+  ],
+  "related": ["natural", "landuse", "extract"]
+}

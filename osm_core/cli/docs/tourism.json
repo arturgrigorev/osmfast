@@ -1,0 +1,27 @@
+{
+  "name": "tourism",
+  "summary": "Extract tourism features",
+  "description": "The tourism command extracts hotels, attractions, and tourism infrastructure from OSM data. Categories include:\n\n- Accommodation: hotels, hostels, campsites\n- Attraction: theme parks, zoos, museums, viewpoints\n- Information: tourist info, maps, guideposts\n\nIncludes star ratings and contact information.",
+  "usage": [
+    "osmfast tourism map.osm -o tourism.geojson",
+    "osmfast tourism map.osm --category accommodation -o hotels.geojson",
+    "osmfast tourism map.osm --type viewpoint -o viewpoints.geojson"
+  ],
+  "options": {
+    "-t, --type": "Filter by type: hotel, museum, viewpoint, etc.",
+    "-c, --category": "Filter by category: accommodation, attraction, information, other",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Tourism features with:\n- tourism: Feature type\n- name: Place name\n- stars: Hotel star rating\n- website, phone: Contact info\n- Coordinates",
+  "examples": [
+    ["All tourism", "osmfast tourism city.osm -o tourism.geojson"],
+    ["Hotels", "osmfast tourism city.osm --category accommodation -o hotels.geojson"],
+    ["Viewpoints", "osmfast tourism city.osm --type viewpoint -o viewpoints.geojson"],
+    ["Museums", "osmfast tourism city.osm --type museum -o museums.geojson"],
+    ["Statistics", "osmfast tourism city.osm --stats"],
+    ["Campsites", "osmfast tourism rural.osm --type camp_site -o camping.geojson"]
+  ],
+  "related": ["leisure", "historic", "poi", "amenity"]
+}

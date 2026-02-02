@@ -1,0 +1,29 @@
+{
+  "name": "count",
+  "summary": "Quick element and tag counting",
+  "description": "The count command provides fast counting of OSM elements and tag values. It supports:\n\n- Total node/way counts\n- Filtered counts by tag\n- Grouping by tag key\n- Quiet mode for scripting\n\nOptimized for quick statistics without full extraction.",
+  "usage": [
+    "osmfast count map.osm",
+    "osmfast count map.osm --filter highway=*",
+    "osmfast count map.osm --filter highway=* --by highway",
+    "osmfast count map.osm --filter amenity=restaurant -q"
+  ],
+  "options": {
+    "-f, --filter": "Count elements matching filter (e.g., amenity=*, highway=primary)",
+    "-b, --by": "Group counts by tag key",
+    "-t, --type": "Element type: nodes, ways, all (default: all)",
+    "-n, --top": "Number of results for --by (default: 20)",
+    "--json": "Output as JSON",
+    "-q, --quiet": "Only output the count number"
+  },
+  "output": "Element counts showing:\n- Node count\n- Way count\n- Matching elements (if filtered)\n- Breakdown by tag value (if --by used)",
+  "examples": [
+    ["Total elements", "osmfast count city.osm"],
+    ["All highways", "osmfast count city.osm --filter highway=*"],
+    ["Highways by type", "osmfast count city.osm --filter highway=* --by highway"],
+    ["Restaurant count", "osmfast count city.osm --filter amenity=restaurant -q"],
+    ["Ways only", "osmfast count city.osm --type ways"],
+    ["JSON output", "osmfast count city.osm --filter building=* --json"]
+  ],
+  "related": ["tags", "stats", "search"]
+}

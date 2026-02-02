@@ -1,0 +1,25 @@
+{
+  "name": "directions",
+  "summary": "Generate turn-by-turn navigation directions",
+  "description": "The directions command calculates a route and generates human-readable turn-by-turn directions. It includes street names, turn instructions, and distances.\n\nSupports multiple travel modes and output formats.",
+  "usage": [
+    "osmfast directions map.osm --from 51.5,-0.1 --to 51.6,-0.2",
+    "osmfast directions map.osm --from 51.5,-0.1 --to 51.6,-0.2 --mode walk",
+    "osmfast directions map.osm --from 51.5,-0.1 --to 51.6,-0.2 -f json"
+  ],
+  "options": {
+    "--from": "Start point as lat,lon (required)",
+    "--to": "End point as lat,lon (required)",
+    "-m, --mode": "Travel mode: drive, walk, bike (default: drive)",
+    "-o, --output": "Output file (default: stdout)",
+    "-f, --format": "Output format: text, json"
+  },
+  "output": "Turn-by-turn directions including:\n- Step number and instruction\n- Street/road name\n- Distance for each step\n- Turn type (left, right, straight, etc.)\n- Total distance and estimated time",
+  "examples": [
+    ["Basic directions", "osmfast directions city.osm --from 51.5,-0.1 --to 51.6,-0.2"],
+    ["Walking directions", "osmfast directions city.osm --from 51.5,-0.1 --to 51.6,-0.2 --mode walk"],
+    ["Cycling directions", "osmfast directions city.osm --from 51.5,-0.1 --to 51.6,-0.2 --mode bike"],
+    ["JSON output", "osmfast directions city.osm --from 51.5,-0.1 --to 51.6,-0.2 -f json -o route.json"]
+  ],
+  "related": ["route", "route-multi", "alternatives", "isochrone"]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "bottleneck",
+  "summary": "Identify network chokepoints and critical links",
+  "description": "The bottleneck command identifies critical points in the road network where disruption would have the greatest impact on connectivity. It finds:\n\n- Bridge edges (edges whose removal disconnects the graph)\n- Articulation points (nodes whose removal disconnects the graph)\n- High-betweenness edges (frequently used in shortest paths)\n\nUseful for infrastructure planning and resilience analysis.",
+  "usage": [
+    "osmfast bottleneck map.osm",
+    "osmfast bottleneck map.osm --top 20",
+    "osmfast bottleneck map.osm -f geojson -o bottlenecks.geojson"
+  ],
+  "options": {
+    "-n, --top": "Number of top bottlenecks to return (default: 20)",
+    "-o, --output": "Output file (default: stdout)",
+    "-f, --format": "Output format: text, json, geojson"
+  },
+  "output": "List of network bottlenecks with:\n- Type (bridge edge, articulation point, high betweenness)\n- Location coordinates\n- Connected road names\n- Impact score\n- Components affected if removed",
+  "examples": [
+    ["Find bottlenecks", "osmfast bottleneck city.osm"],
+    ["Top 20 chokepoints", "osmfast bottleneck city.osm --top 20"],
+    ["Top 50 chokepoints", "osmfast bottleneck city.osm -n 50"],
+    ["Export as GeoJSON", "osmfast bottleneck city.osm -f geojson -o bottlenecks.geojson"],
+    ["JSON output", "osmfast bottleneck city.osm -f json"]
+  ],
+  "related": ["connectivity", "centrality", "network", "roads"]
+}

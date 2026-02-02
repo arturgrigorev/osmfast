@@ -1,0 +1,27 @@
+{
+  "name": "nearby",
+  "summary": "Find features within radius of other features",
+  "description": "The nearby command finds target features within a specified radius of source features. This is useful for:\n\n- Finding pharmacies near hospitals\n- Locating parking near shops\n- Analyzing service coverage\n- Proximity-based analysis",
+  "usage": [
+    "osmfast nearby map.osm --source amenity=hospital --target amenity=pharmacy --radius 500m",
+    "osmfast nearby map.osm --source amenity=school --target shop=* --radius 1km",
+    "osmfast nearby map.osm --source tourism=hotel --target amenity=restaurant --radius 200m -o nearby.geojson"
+  ],
+  "options": {
+    "--source": "Source feature filter (e.g., amenity=hospital)",
+    "--target": "Target feature filter (e.g., amenity=pharmacy)",
+    "-r, --radius": "Search radius (e.g., 500m, 1km)",
+    "-o, --output": "Output file (default: stdout)",
+    "-f, --format": "Output format: geojson, json, csv",
+    "--stats": "Show statistics only"
+  },
+  "output": "For each source feature:\n- Source feature info\n- List of nearby target features\n- Distance to each target\n- Count of nearby targets\n\nGeoJSON includes both source and target geometries.",
+  "examples": [
+    ["Pharmacies near hospitals", "osmfast nearby city.osm --source amenity=hospital --target amenity=pharmacy --radius 500m"],
+    ["Shops near schools", "osmfast nearby city.osm --source amenity=school --target shop=* --radius 1km"],
+    ["Restaurants near hotels", "osmfast nearby city.osm --source tourism=hotel --target amenity=restaurant --radius 200m"],
+    ["Statistics only", "osmfast nearby city.osm --source amenity=bank --target amenity=atm --radius 100m --stats"],
+    ["Export to GeoJSON", "osmfast nearby city.osm --source amenity=hospital --target amenity=pharmacy --radius 500m -o nearby.geojson"]
+  ],
+  "related": ["nearest", "within", "buffer", "poi"]
+}

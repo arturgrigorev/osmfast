@@ -1,0 +1,3 @@
+osm_core
+osmfast
+osmfast_gui

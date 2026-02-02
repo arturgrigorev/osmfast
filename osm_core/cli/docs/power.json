@@ -1,0 +1,26 @@
+{
+  "name": "power",
+  "summary": "Extract power infrastructure",
+  "description": "The power command extracts electrical infrastructure from OSM data including:\n\n- Power lines with voltage and length calculations\n- Substations\n- Generators (wind, solar, hydro, etc.)\n- Towers and poles\n\nUseful for energy infrastructure mapping and analysis.",
+  "usage": [
+    "osmfast power map.osm -o power.geojson",
+    "osmfast power map.osm --type line -o powerlines.geojson",
+    "osmfast power map.osm --type substation -o substations.geojson"
+  ],
+  "options": {
+    "--type": "Power feature type: line, substation, generator, tower, pole, all (default: all)",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--stats": "Show statistics only",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Power infrastructure with:\n- power: Feature type (line, substation, etc.)\n- name: Feature name\n- operator: Power company\n- voltage: Voltage in volts\n- cables: Number of cables (for lines)\n- source: Energy source (for generators)\n- length_m: Line length in meters\n- Geometry: Point or LineString",
+  "examples": [
+    ["All power", "osmfast power region.osm -o power.geojson"],
+    ["Power lines", "osmfast power region.osm --type line -o lines.geojson"],
+    ["Substations", "osmfast power region.osm --type substation -o substations.geojson"],
+    ["Generators", "osmfast power region.osm --type generator -o generators.geojson"],
+    ["Statistics", "osmfast power region.osm --stats"],
+    ["CSV output", "osmfast power region.osm -f csv -o power.csv"]
+  ],
+  "related": ["network", "extract"]
+}

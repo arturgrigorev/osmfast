@@ -1,0 +1,24 @@
+{
+  "name": "densify",
+  "summary": "Add points to geometries",
+  "description": "The densify command adds intermediate points along line segments at regular intervals. Useful for:\n\n- GPS track simulation\n- Animation paths\n- More accurate distance calculations\n- Buffer operations requiring dense vertices\n\nOpposite of simplify - increases point density.",
+  "usage": [
+    "osmfast densify map.osm --interval 50m -o dense.geojson",
+    "osmfast densify roads.geojson --interval 100m -o dense.geojson",
+    "osmfast densify map.osm --interval 25m --filter highway=* -o roads.geojson"
+  ],
+  "options": {
+    "-i, --interval": "Maximum distance between points (e.g., 50m, 100m) - required",
+    "--filter": "Filter features (e.g., highway=*)",
+    "-f, --format": "Output format: geojson (default: geojson)",
+    "-o, --output": "Output file (required)"
+  },
+  "output": "Geometries with additional interpolated points. Shows point increase percentage in summary.",
+  "examples": [
+    ["50m intervals", "osmfast densify city.osm --interval 50m -o dense.geojson"],
+    ["25m intervals", "osmfast densify city.osm --interval 25m -o very_dense.geojson"],
+    ["Roads only", "osmfast densify city.osm --interval 50m --filter highway=* -o roads.geojson"],
+    ["From GeoJSON", "osmfast densify input.geojson --interval 100m -o dense.geojson"]
+  ],
+  "related": ["simplify", "convert", "extract"]
+}

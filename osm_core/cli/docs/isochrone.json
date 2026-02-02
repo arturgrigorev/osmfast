@@ -1,0 +1,24 @@
+{
+  "name": "isochrone",
+  "summary": "Generate travel time polygons (accessibility areas)",
+  "description": "The isochrone command creates polygons showing areas reachable within specified travel times from a starting point. This is useful for:\n\n- Accessibility analysis\n- Service area planning\n- Real estate analysis\n- Urban planning\n\nMultiple time intervals can be generated at once for comparison.",
+  "usage": [
+    "osmfast isochrone --lat 51.5 --lon -0.1 --time 5,10,15 map.osm -o iso.geojson",
+    "osmfast isochrone --lat 51.5 --lon -0.1 --mode walk map.osm -o walk_iso.geojson"
+  ],
+  "options": {
+    "--lat": "Origin latitude (required)",
+    "--lon": "Origin longitude (required)",
+    "--time, -t": "Travel times in minutes, comma-separated (default: 5,10,15)",
+    "--mode, -m": "Travel mode: walk, bike, drive (default: walk)",
+    "--resolution": "Number of boundary points (default: 36)",
+    "-o, --output": "Output GeoJSON file (required)"
+  },
+  "output": "GeoJSON FeatureCollection with one polygon per time interval.\nEach polygon has properties:\n- time_minutes: Travel time for this isochrone\n- mode: Travel mode used\n- origin: Starting coordinates",
+  "examples": [
+    ["Walking isochrones", "osmfast isochrone --lat 51.5 --lon -0.1 --time 5,10,15 --mode walk city.osm -o iso.geojson"],
+    ["Driving isochrones", "osmfast isochrone --lat 51.5 --lon -0.1 --time 5,10,20 --mode drive city.osm -o drive_iso.geojson"],
+    ["High resolution", "osmfast isochrone --lat 51.5 --lon -0.1 --resolution 72 city.osm -o detailed.geojson"]
+  ],
+  "related": ["route", "network", "nearest"]
+}

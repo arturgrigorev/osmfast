@@ -1,0 +1,28 @@
+{
+  "name": "healthcare",
+  "summary": "Extract health facilities",
+  "description": "The healthcare command extracts hospitals, clinics, pharmacies, and medical practices from OSM data. Categories include:\n\n- Hospital: hospitals, clinics\n- Doctor: general practitioners, doctors\n- Specialist: dentists, optometrists, physiotherapists\n- Pharmacy: pharmacies, chemists\n- Emergency: emergency departments, urgent care\n\nIncludes accessibility and specialty information.",
+  "usage": [
+    "osmfast healthcare map.osm -o healthcare.geojson",
+    "osmfast healthcare map.osm --category hospital -o hospitals.geojson",
+    "osmfast healthcare map.osm --emergency-only -o emergency.geojson"
+  ],
+  "options": {
+    "-t, --type": "Filter by type: hospital, pharmacy, dentist, etc.",
+    "-c, --category": "Filter by category: hospital, doctor, specialist, pharmacy, emergency, other",
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--stats": "Show statistics only",
+    "--emergency-only": "Only facilities with emergency services",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Healthcare facilities with:\n- healthcare_type: Facility type\n- name: Facility name\n- operator: Operating organization\n- specialty: Medical specialties\n- emergency: Has emergency services\n- wheelchair: Accessibility\n- phone, website: Contact info",
+  "examples": [
+    ["All healthcare", "osmfast healthcare city.osm -o healthcare.geojson"],
+    ["Hospitals only", "osmfast healthcare city.osm --category hospital -o hospitals.geojson"],
+    ["Pharmacies", "osmfast healthcare city.osm --type pharmacy -o pharmacies.geojson"],
+    ["Emergency services", "osmfast healthcare city.osm --emergency-only -o emergency.geojson"],
+    ["Dentists", "osmfast healthcare city.osm --type dentist -o dentists.geojson"],
+    ["Statistics", "osmfast healthcare city.osm --stats"]
+  ],
+  "related": ["amenity", "emergency", "poi"]
+}

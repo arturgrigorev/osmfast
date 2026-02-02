@@ -1,0 +1,27 @@
+{
+  "name": "nearest",
+  "summary": "Find K nearest features to a point",
+  "description": "The nearest command finds the K closest features to a specified point. It supports filtering by tag expressions and limiting results by maximum distance.\n\nUses efficient spatial indexing for fast queries even on large datasets.",
+  "usage": [
+    "osmfast nearest map.osm --lat 51.5 --lon -0.1",
+    "osmfast nearest map.osm --lat 51.5 --lon -0.1 --filter \"amenity=restaurant\"",
+    "osmfast nearest map.osm --lat 51.5 --lon -0.1 -k 10 --max-distance 500"
+  ],
+  "options": {
+    "--lat": "Latitude of search point (required)",
+    "--lon": "Longitude of search point (required)",
+    "-k, --count": "Number of results to return (default: 5)",
+    "--filter": "Tag filter expression (e.g., amenity=restaurant)",
+    "--max-distance": "Maximum distance in meters",
+    "-o, --output": "Output file (default: stdout)",
+    "-f, --format": "Output format: json, geojson, text"
+  },
+  "output": "List of nearest features with:\n- Distance in meters\n- OSM ID and type\n- Coordinates\n- Name and tags\n- Bearing from search point",
+  "examples": [
+    ["Find 5 nearest features", "osmfast nearest city.osm --lat 51.5 --lon -0.1"],
+    ["Find 10 nearest restaurants", "osmfast nearest city.osm --lat 51.5 --lon -0.1 -k 10 --filter \"amenity=restaurant\""],
+    ["Find cafes within 500m", "osmfast nearest city.osm --lat 51.5 --lon -0.1 --filter \"amenity=cafe\" --max-distance 500"],
+    ["Output as GeoJSON", "osmfast nearest city.osm --lat 51.5 --lon -0.1 -f geojson -o nearest.geojson"]
+  ],
+  "related": ["nearest-road", "within", "poi", "search"]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "search",
+  "summary": "Search for features by name or tag",
+  "description": "The search command finds features matching a text query. It searches the 'name' tag by default but can also search other tags.\n\nSupports case-insensitive matching, partial matches, and regular expressions.",
+  "usage": [
+    "osmfast search \"Starbucks\" map.osm",
+    "osmfast search \"High Street\" map.osm --tag name",
+    "osmfast search \"coffee\" map.osm --tag cuisine",
+    "osmfast search \"^A[0-9]+$\" map.osm --tag ref --regex"
+  ],
+  "options": {
+    "-k, --tag": "Tag to search in (default: name)",
+    "-r, --regex": "Interpret query as regular expression",
+    "-c, --case-sensitive": "Enable case-sensitive matching",
+    "-t, --type": "Element type: nodes, ways, all (default: all)",
+    "-n, --limit": "Maximum number of results (default: 100)",
+    "--count": "Only show count of matches",
+    "-o, --output": "Output file (GeoJSON format)"
+  },
+  "output": "List of matching features with:\n- OSM ID and type\n- Name and matched tag value\n- Coordinates\n- Key tags (amenity, highway, etc.)",
+  "examples": [
+    ["Find by name", "osmfast search \"Starbucks\" city.osm"],
+    ["Search street names", "osmfast search \"Oxford\" city.osm --tag \"addr:street\""],
+    ["Find road references", "osmfast search \"M25\" city.osm --tag ref"],
+    ["Regex search", "osmfast search \"^[AB][0-9]+$\" city.osm --tag ref --regex"],
+    ["Output as GeoJSON", "osmfast search \"museum\" city.osm -o museums.geojson"]
+  ],
+  "related": ["names", "lookup", "poi", "tags"]
+}

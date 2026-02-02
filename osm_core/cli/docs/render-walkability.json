@@ -1,0 +1,25 @@
+{
+  "name": "render-walkability",
+  "summary": "Generate interactive walkability map",
+  "description": "The render-walkability command creates an interactive HTML visualization of walkability analysis. The map shows:\n\n- Road network color-coded by type (footway, residential, main road)\n- Walking isochrones (5, 10, 15 minute zones)\n- Points of interest with emoji markers\n- Pedestrian crossings and traffic signals\n- Detailed metrics in sidebar\n\nOpens automatically in browser.",
+  "usage": [
+    "osmfast render-walkability map.osm --lat 51.5 --lon -0.1",
+    "osmfast render-walkability map.osm --lat 51.5 --lon -0.1 --radius 1000",
+    "osmfast render-walkability map.osm --lat 51.5 --lon -0.1 -o mymap.html --no-open"
+  ],
+  "options": {
+    "--lat": "Center latitude for analysis (required)",
+    "--lon": "Center longitude for analysis (required)",
+    "-r, --radius": "Analysis radius in meters (default: 800)",
+    "-o, --output": "Output HTML file (default: walkability_map.html)",
+    "--no-open": "Do not open the map in browser"
+  },
+  "output": "Interactive HTML map with:\n- Leaflet.js map with layer controls\n- Walking time isochrones (network-based)\n- POI markers by category (food, services, transit, etc.)\n- Road network visualization\n- Metrics sidebar with detailed statistics",
+  "examples": [
+    ["Basic map", "osmfast render-walkability city.osm --lat 51.5 --lon -0.1"],
+    ["Larger area", "osmfast render-walkability city.osm --lat 51.5 --lon -0.1 --radius 1000"],
+    ["Custom output", "osmfast render-walkability city.osm --lat 51.5 --lon -0.1 -o analysis.html"],
+    ["No browser", "osmfast render-walkability city.osm --lat 51.5 --lon -0.1 --no-open"]
+  ],
+  "related": ["walkability", "bikeability", "catchment", "isochrone"]
+}

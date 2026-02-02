@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OSMFast Command Documentation",
+  "description": "Schema for command documentation JSON files",
+  "type": "object",
+  "required": ["name", "summary", "description", "usage", "options"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Command name (must match filename without .json)"
+    },
+    "summary": {
+      "type": "string",
+      "description": "One-line description for argparse help"
+    },
+    "description": {
+      "type": "string",
+      "description": "Multi-line detailed description"
+    },
+    "usage": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Example command invocations"
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "description": "Map of option flags to descriptions"
+    },
+    "output": {
+      "type": "string",
+      "description": "Description of command output"
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "description": "Array of [description, command] pairs"
+    },
+    "related": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Related command names"
+    },
+    "aliases": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Commands that share this documentation"
+    }
+  }
+}

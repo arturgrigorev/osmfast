@@ -1,0 +1,27 @@
+{
+  "name": "boundary",
+  "summary": "Extract administrative boundaries",
+  "description": "The boundary command extracts administrative boundaries from OSM data. It identifies:\n\n- Countries (level 2)\n- States/provinces (level 4)\n- Cities (level 8)\n- Districts and neighborhoods\n\nUseful for administrative analysis and regional mapping.",
+  "usage": [
+    "osmfast boundary map.osm -o boundaries.geojson",
+    "osmfast boundary map.osm --level 8 -o cities.geojson",
+    "osmfast boundary map.osm --list"
+  ],
+  "options": {
+    "-f, --format": "Output format: geojson, json, csv (default: geojson)",
+    "--level": "Filter by admin level (2-11)",
+    "--name": "Filter by name (partial match)",
+    "--list": "List boundaries only (no geometry)",
+    "-o, --output": "Output file (default: stdout)"
+  },
+  "output": "Boundary polygons with:\n- name: Boundary name\n- admin_level: OSM admin level (2-11)\n- level_name: Human-readable level (country, state, city, etc.)\n- ref: Reference code\n- wikidata: Wikidata ID",
+  "examples": [
+    ["All boundaries", "osmfast boundary country.osm -o boundaries.geojson"],
+    ["Cities only", "osmfast boundary country.osm --level 8 -o cities.geojson"],
+    ["States", "osmfast boundary country.osm --level 4 -o states.geojson"],
+    ["List boundaries", "osmfast boundary country.osm --list"],
+    ["Search by name", "osmfast boundary country.osm --name London"],
+    ["CSV output", "osmfast boundary country.osm -f csv -o boundaries.csv"]
+  ],
+  "related": ["landuse", "clip", "within"]
+}

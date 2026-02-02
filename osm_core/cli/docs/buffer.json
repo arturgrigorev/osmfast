@@ -1,0 +1,26 @@
+{
+  "name": "buffer",
+  "summary": "Create buffer zones around features",
+  "description": "The buffer command generates circular buffer polygons around points or feature centroids. Useful for:\n\n- Service area analysis\n- Impact zone mapping\n- Proximity visualization\n\nSupports filtering input features and configurable circle resolution.",
+  "usage": [
+    "osmfast buffer map.osm --radius 500m -o buffers.geojson",
+    "osmfast buffer map.osm --radius 1km --filter amenity=hospital -o hospital_zones.geojson",
+    "osmfast buffer points.geojson --radius 100m -o buffers.geojson"
+  ],
+  "options": {
+    "-r, --radius": "Buffer radius (e.g., 100m, 1km) - required",
+    "--filter": "Filter elements (e.g., amenity=hospital)",
+    "--segments": "Number of segments for circle approximation (default: 16)",
+    "--dissolve": "Dissolve overlapping buffers",
+    "-o, --output": "Output GeoJSON file (required)"
+  },
+  "output": "GeoJSON FeatureCollection with circular polygon buffers around each input point, including original feature properties plus buffer_radius_m and center coordinates.",
+  "examples": [
+    ["500m buffers", "osmfast buffer city.osm --radius 500m -o buffers.geojson"],
+    ["Hospital zones", "osmfast buffer city.osm --radius 1km --filter amenity=hospital -o hospital_zones.geojson"],
+    ["School catchments", "osmfast buffer city.osm --radius 800m --filter amenity=school -o school_zones.geojson"],
+    ["High resolution", "osmfast buffer city.osm --radius 500m --segments 32 -o buffers.geojson"],
+    ["From GeoJSON", "osmfast buffer points.geojson --radius 100m -o buffers.geojson"]
+  ],
+  "related": ["within", "catchment", "isochrone", "nearest"]
+}

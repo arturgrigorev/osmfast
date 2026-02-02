@@ -1,0 +1,49 @@
+{
+  "name": "extract",
+  "summary": "Extract features with Osmosis-compatible filtering",
+  "description": "The extract command parses OSM files and extracts features matching specified filters. It supports the same filter syntax as Osmosis, making it easy to migrate existing workflows.\n\nFeatures are semantically categorized (amenities, highways, buildings) and can be output in multiple formats including Shapefile with geometry calculations.",
+  "usage": [
+    "osmfast extract map.osm output.json",
+    "osmfast extract --format geojson map.osm output.geojson",
+    "osmfast extract --accept-nodes amenity=restaurant map.osm food.json",
+    "osmfast extract --accept-ways highway=* --used-node map.osm roads.json",
+    "osmfast extract --bbox 49.5 10.9 49.3 11.2 germany.osm region.json",
+    "osmfast extract --format shapefile --road-geometry map.osm roads",
+    "osmfast extract --format shapefile --road-levels main --infrastructure bridges map.osm output"
+  ],
+  "options": {
+    "-f, --format": "Output format: json, geojson, csv, xml, osm, shapefile (default: auto-detect)",
+    "--accept-nodes": "Accept nodes matching tag filter (e.g., amenity=restaurant)",
+    "--accept-ways": "Accept ways matching tag filter (e.g., highway=*)",
+    "--reject-nodes": "Reject nodes matching tag filter",
+    "--reject-ways": "Reject ways matching tag filter",
+    "--reject-nodes-global": "Reject all nodes (exclude node extraction)",
+    "--reject-ways-global": "Reject all ways (exclude way extraction)",
+    "--reject-relations": "Reject all relations",
+    "--used-node": "Only include nodes referenced by accepted ways",
+    "--bbox": "Bounding box filter: TOP LEFT BOTTOM RIGHT (lat/lon)",
+    "--compact": "Minimize output file size (compact JSON)",
+    "--include-metadata": "Include OSM metadata columns in CSV output",
+    "--include-all-tags": "Include all OSM tags in shapefile DBF fields",
+    "--road-attributes": "Include core road attributes (maxspeed, lanes, surface, etc.)",
+    "--building-attributes": "Include core building attributes (height, levels, address)",
+    "--amenity-attributes": "Include core amenity attributes (name, brand, opening_hours)",
+    "--traffic-safety-attributes": "Include traffic safety attributes (crossing type, signals, calming)",
+    "--cycling-attributes": "Include cycling infrastructure attributes (cycleway type, surface)",
+    "--road-geometry": "Calculate road geometry (length, sinuosity, lane_km, sidewalk, etc.)",
+    "--road-levels": "Road level filter: 1-6, or presets (motorway/arterial/main/driveable/all)",
+    "--infrastructure": "Infrastructure filter: bridges,tunnels,fords,embankments,covered,all",
+    "--only-infrastructure": "Only extract roads with specified infrastructure"
+  },
+  "output": "JSON/GeoJSON: Features with geometry, tags, and optional metadata\nCSV: Tabular format with one feature per row\nXML/OSM: Standard OSM XML format\nShapefile: ESRI Shapefile with .shp, .shx, .dbf, .prj files",
+  "examples": [
+    ["All features to JSON", "osmfast extract city.osm features.json"],
+    ["Restaurants as GeoJSON", "osmfast extract --accept-nodes amenity=restaurant city.osm restaurants.geojson"],
+    ["Roads with nodes", "osmfast extract --accept-ways highway=* --used-node city.osm roads.json"],
+    ["Area extraction", "osmfast extract --bbox 49.5 10.9 49.3 11.2 germany.osm region.json"],
+    ["Roads to Shapefile", "osmfast extract --format shapefile --road-geometry city.osm roads"],
+    ["Main roads with bridges", "osmfast extract --format shapefile --road-levels main --infrastructure bridges city.osm output"],
+    ["Only tunnels", "osmfast extract --format shapefile --infrastructure tunnels --only-infrastructure city.osm tunnels"]
+  ],
+  "related": ["filter", "buildings", "roads", "poi"]
+}
