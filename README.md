@@ -790,7 +790,7 @@ Contributions are welcome! Please:
 ### Development Setup
 
 ```bash
-git clone https://github.com/yourusername/osmfast.git
+git clone https://github.com/arturgrigorev/osmfast.git
 cd osmfast
 pip install -e .
 pytest tests/
